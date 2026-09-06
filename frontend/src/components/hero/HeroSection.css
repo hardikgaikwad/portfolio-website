@@ -1,0 +1,125 @@
+/* HeroSection styles */
+
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: calc(var(--nav-height) + var(--space-2xl)) var(--space-lg) var(--space-2xl);
+  position: relative;
+}
+
+/* Boot sequence */
+.hero__boot {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-paper);
+  z-index: 10;
+}
+
+.hero__boot-lines {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--color-dark-muted);
+  max-width: 500px;
+  padding: var(--space-xl);
+}
+
+.hero__boot-line {
+  margin-bottom: var(--space-xs);
+  opacity: 0;
+  animation: bootFadeIn 0.3s ease forwards;
+}
+
+.boot-ok {
+  color: var(--color-navy-primary);
+}
+
+.boot-init {
+  color: var(--color-orange);
+  font-weight: 700;
+}
+
+@keyframes bootFadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Content */
+.hero__content {
+  text-align: center;
+  max-width: 900px;
+  width: 100%;
+}
+
+.hero__label {
+  margin-bottom: var(--space-lg);
+}
+
+.hero__label-text {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-navy-light);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.hero__subtitle {
+  margin-top: var(--space-xl);
+}
+
+.hero__subtitle-text {
+  font-family: var(--font-condensed);
+  font-size: clamp(var(--text-base), 2.5vw, var(--text-2xl));
+  font-weight: 600;
+  color: var(--color-navy-primary);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.hero__meta {
+  margin-top: var(--space-xl);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.hero__meta-item {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-dark-muted);
+  letter-spacing: 0.1em;
+}
+
+.hero__meta-sep {
+  color: var(--color-orange);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hero {
+    min-height: 80vh;
+    padding-top: calc(var(--nav-height) + var(--space-xl));
+  }
+
+  .hero__subtitle-text {
+    letter-spacing: 0.1em;
+  }
+
+  .hero__meta {
+    flex-direction: column;
+    gap: var(--space-xs);
+  }
+
+  .hero__meta-sep {
+    display: none;
+  }
+}

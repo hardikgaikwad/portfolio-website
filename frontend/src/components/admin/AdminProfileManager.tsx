@@ -1,0 +1,225 @@
+/* ═══════════════════════════════════════════════════════════
+   AdminProfileManager — Edit Operative Dossier & Resume Upload
+   ═══════════════════════════════════════════════════════════ */
+
+import { useState, useEffect } from 'react';
+import type { Profile } from '../../types/api';
+import {
+  adminFetchProfile,
+  adminUpdateProfile,
+  adminUploadResume,
+} from '../../services/api';
+
+export default function AdminProfileManager() {
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [focusInput, setFocusInput] = useState('');
+  const [doingInput, setDoingInput] = useState('');
+  const [resumeFile, setResumeFile] = useState<File | null>(null);
+  const [feedback, setFeedback] = useState<string | null>(null);
+
+  const loadProfile = async () => {
+    try {
+      setLoading(true);
+      const data = await adminFetchProfile();
+      setProfile(data);
+      setFocusInput(data.focus_areas ? data.focus_areas.join(', ') : '');
+      setDoingInput(data.currently_doing ? data.currently_doing.join(', ') : '');
+    } catch {
+      setFeedback('Failed to load profile.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadProfile();
+  }, []);
+
+  const handleSave = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!profile) return;
+
+    try {
+      const focusAreas = focusInput.split(',').map((s) => s.trim()).filter(Boolean);
+      const currentlyDoing = doingInput.split(',').map((s) => s.trim()).filter(Boolean);
+
+      const payload = {
+        name: profile.name,
+        title: profile.title,
+        subtitle: profile.subtitle,
+        bio: profile.bio,
+        email: profile.email,
+        location: profile.location,
+        focus_areas: focusAreas,
+        currently_doing: currentlyDoing,
+      };
+
+      const updated = await adminUpdateProfile(payload);
+      setProfile(updated);
+      setFeedback('Profile dossier updated successfully.');
+    } catch {
+      setFeedback('Failed to update profile.');
+    }
+  };
+
+  const handleUploadResume = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!resumeFile) return;
+
+    try {
+      await adminUploadResume(resumeFile);
+      setFeedback('Resume document uploaded and linked.');
+      loadProfile();
+      setResumeFile(null);
+    } catch {
+      setFeedback('Failed to upload resume document.');
+    }
+  };
+
+  if (loading) {
+    return <div className="admin-loading">RETRIEVING OPERATIVE DOSSIER...</div>;
+  }
+
+  if (!profile) {
+    return <div className="admin-loading">NO PROFILE RECORD FOUND.</div>;
+  }
+
+  return (
+    <div className="admin-manager">
+      <div className="admin-manager__header">
+        <div>
+          <h3 className="admin-manager__title">OPERATIVE DOSSIER & IDENTITY</h3>
+          <p className="admin-manager__subtitle">Configure bio, titles, coordinates, and upload latest CV document.</p>
+        </div>
+      </div>
+
+      {feedback && (
+        <div className="admin-feedback" onClick={() => setFeedback(null)}>
+          {feedback} (click to dismiss)
+        </div>
+      )}
+
+      <div className="admin-profile-grid">
+        {/* Profile Info Form */}
+        <form onSubmit={handleSave} className="admin-form admin-profile-form">
+          <div className="admin-form-row">
+            <div className="admin-form-field">
+              <label>FULL NAME *</label>
+              <input
+                type="text"
+                required
+                value={profile.name}
+                onChange={(e) => setProfile({ ...profile, name: e.target.value })}
+              />
+            </div>
+            <div className="admin-form-field">
+              <label>PRIMARY TITLE *</label>
+              <input
+                type="text"
+                required
+                value={profile.title}
+                onChange={(e) => setProfile({ ...profile, title: e.target.value })}
+              />
+            </div>
+          </div>
+
+          <div className="admin-form-field">
+            <label>SUBTITLE / TICKER BANNER</label>
+            <input
+              type="text"
+              value={profile.subtitle}
+              placeholder="e.g. CYBERSECURITY • FULL-STACK • OFFENSIVE SECURITY"
+              onChange={(e) => setProfile({ ...profile, subtitle: e.target.value })}
+            />
+          </div>
+
+          <div className="admin-form-row">
+            <div className="admin-form-field">
+              <label>CONTACT EMAIL *</label>
+              <input
+                type="email"
+                required
+                value={profile.email}
+                onChange={(e) => setProfile({ ...profile, email: e.target.value })}
+              />
+            </div>
+            <div className="admin-form-field">
+              <label>FIELD LOCATION</label>
+              <input
+                type="text"
+                value={profile.location}
+                placeholder="e.g. Global / Remote"
+                onChange={(e) => setProfile({ ...profile, location: e.target.value })}
+              />
+            </div>
+          </div>
+
+          <div className="admin-form-field">
+            <label>BIOGRAPHICAL DISPATCH *</label>
+            <textarea
+              rows={4}
+              required
+              value={profile.bio}
+              onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
+            />
+          </div>
+
+          <div className="admin-form-field">
+            <label>CORE FOCUS VECTORS (COMMA SEPARATED)</label>
+            <input
+              type="text"
+              value={focusInput}
+              placeholder="Offensive Security, Web Dev, Cloud Architecture"
+              onChange={(e) => setFocusInput(e.target.value)}
+            />
+          </div>
+
+          <div className="admin-form-field">
+            <label>CURRENT DIRECTIVES (COMMA SEPARATED)</label>
+            <textarea
+              rows={3}
+              value={doingInput}
+              placeholder="Auditing web applications, Building microservices"
+              onChange={(e) => setDoingInput(e.target.value)}
+            />
+          </div>
+
+          <button type="submit" className="admin-btn admin-btn--primary">
+            UPDATE DOSSIER DATA
+          </button>
+        </form>
+
+        {/* Resume Box */}
+        <div className="admin-resume-box">
+          <h4 className="admin-resume-box__title">RESUME / CV DOCUMENT</h4>
+          <p className="admin-resume-box__text">
+            {profile.resume_url ? (
+              <>Current document linked: <a href={profile.resume_url} target="_blank" rel="noopener noreferrer">View Current CV ↗</a></>
+            ) : (
+              'No resume document currently uploaded.'
+            )}
+          </p>
+
+          <form onSubmit={handleUploadResume} className="admin-upload-form">
+            <div className="admin-form-field">
+              <label>SELECT NEW CV (PDF, DOC, DOCX)</label>
+              <input
+                type="file"
+                accept=".pdf,.doc,.docx"
+                onChange={(e) => setResumeFile(e.target.files?.[0] || null)}
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={!resumeFile}
+              className="admin-btn admin-btn--secondary"
+            >
+              UPLOAD RESUME 🡭
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+}

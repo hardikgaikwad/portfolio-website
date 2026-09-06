@@ -1,0 +1,170 @@
+/* ═══════════════════════════════════════════════════════════
+   GLOBAL STYLES — Portfolio
+   ═══════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Barlow+Condensed:wght@400;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import './variables.css';
+
+/* ── Reset ────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  color: var(--color-dark);
+  line-height: 1.6;
+  background-color: var(--color-paper);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* ── Graph Paper Background ───────────────────────────────── */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('/grid-paper-bg.webp');
+  background-size: cover;
+  background-position: center;
+  background-repeat: repeat;
+  opacity: 0.7;
+  z-index: var(--z-background);
+  pointer-events: none;
+}
+
+/* Fallback CSS grid if image fails */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image:
+    linear-gradient(var(--color-paper-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-paper-grid) 1px, transparent 1px);
+  background-size: 24px 24px;
+  opacity: 0.3;
+  z-index: var(--z-background);
+  pointer-events: none;
+}
+
+/* ── Base Elements ────────────────────────────────────────── */
+a {
+  color: var(--color-orange);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--color-golden);
+}
+
+a:focus-visible {
+  outline: 2px solid var(--color-orange);
+  outline-offset: 2px;
+}
+
+button {
+  font-family: var(--font-body);
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+button:focus-visible {
+  outline: 2px solid var(--color-orange);
+  outline-offset: 2px;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+/* ── Scrollbar ────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-paper-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-navy-primary);
+  border-radius: 0;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-navy-secondary);
+}
+
+/* ── Utility Classes ──────────────────────────────────────── */
+.container {
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--space-lg);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── Selection ────────────────────────────────────────────── */
+::selection {
+  background: var(--color-navy-primary);
+  color: var(--color-golden);
+}
+
+/* ── App wrapper ──────────────────────────────────────────── */
+#root {
+  position: relative;
+  z-index: var(--z-content);
+  min-height: 100vh;
+}
+
+/* ── Reduced Motion ───────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

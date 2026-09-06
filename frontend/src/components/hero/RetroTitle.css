@@ -1,0 +1,73 @@
+/* RetroTitle SVG typography styles */
+
+.retro-title {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  user-select: none;
+}
+
+.retro-title__svg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+/* All text layers share the same base font */
+.retro-title__shadow,
+.retro-title__outline,
+.retro-title__fill,
+.retro-title__texture {
+  font-family: 'Archivo Black', Impact, 'Arial Black', sans-serif;
+  font-size: 120px;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+}
+
+/* Shadow — dark navy offset */
+.retro-title__shadow {
+  fill: #0E1B2A;
+  opacity: 0.6;
+}
+
+/* Outline — navy stroke behind fill */
+.retro-title__outline {
+  fill: none;
+  stroke: #183F68;
+  stroke-width: 12px;
+  paint-order: stroke;
+}
+
+/* Main fill — orange/golden gradient */
+.retro-title__fill {
+  fill: url(#retroGradient);
+  stroke: #183F68;
+  stroke-width: 4px;
+  paint-order: stroke;
+}
+
+/* Texture overlay — horizontal lines */
+.retro-title__texture {
+  fill: url(#retroLines);
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* Responsive scaling */
+@media (max-width: 768px) {
+  .retro-title__shadow,
+  .retro-title__outline,
+  .retro-title__fill,
+  .retro-title__texture {
+    font-size: 100px;
+  }
+}
+
+@media (max-width: 480px) {
+  .retro-title__shadow,
+  .retro-title__outline,
+  .retro-title__fill,
+  .retro-title__texture {
+    font-size: 72px;
+  }
+}

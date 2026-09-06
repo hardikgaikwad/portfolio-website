@@ -1,0 +1,37 @@
+# Python / Django
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+*.egg
+db.sqlite3
+*.log
+.env
+media/
+staticfiles/
+
+# Node / Frontend
+node_modules/
+dist/
+.cache/
+*.local
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# OS
+Desktop.ini
+ehthumbs.db

@@ -1,0 +1,3 @@
+/* Import design tokens and global styles */
+@import './styles/variables.css';
+@import './styles/global.css';

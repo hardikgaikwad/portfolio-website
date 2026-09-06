@@ -1,0 +1,106 @@
+/* ═══════════════════════════════════════════════════════════
+   DESIGN TOKENS — Portfolio Design System
+   ═══════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Color Palette ──────────────────────────────────────── */
+  --color-navy-primary: #183F68;
+  --color-navy-secondary: #234D73;
+  --color-navy-deep: #0E2A47;
+  --color-navy-light: #2D5F8A;
+
+  --color-orange: #D56A25;
+  --color-orange-light: #E07D3A;
+  --color-orange-dark: #B85A1E;
+
+  --color-golden: #D5A62D;
+  --color-golden-light: #E0B840;
+  --color-golden-dark: #B89024;
+
+  --color-paper: #EFE9D7;
+  --color-paper-dark: #E5DDCA;
+  --color-paper-light: #F5F1E5;
+  --color-paper-grid: #D4CEBD;
+
+  --color-dark: #1A2730;
+  --color-dark-muted: #2A3740;
+
+  --color-cream: #FAF7F0;
+  --color-error: #C0392B;
+  --color-success: #27AE60;
+  --color-info: #2980B9;
+
+  /* Terminal colors */
+  --color-term-bg: #0E1B2A;
+  --color-term-text: #C8D6E0;
+  --color-term-prompt: #D5A62D;
+  --color-term-cmd: #E0B840;
+  --color-term-output: #A8B8C4;
+  --color-term-error: #E07D3A;
+  --color-term-dir: #5B9BD5;
+  --color-term-success: #5DAE75;
+  --color-term-border: #1E3450;
+
+  /* ── Typography ─────────────────────────────────────────── */
+  --font-display: 'Archivo Black', Impact, 'Arial Black', sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+  --font-condensed: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+
+  /* Font sizes */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 2rem;
+  --text-4xl: 2.5rem;
+  --text-5xl: 3.5rem;
+  --text-6xl: 5rem;
+  --text-hero: clamp(4rem, 12vw, 9rem);
+
+  /* ── Spacing ────────────────────────────────────────────── */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  --space-3xl: 4rem;
+  --space-4xl: 6rem;
+  --space-section: clamp(4rem, 8vh, 8rem);
+
+  /* ── Layout ─────────────────────────────────────────────── */
+  --max-width: 1200px;
+  --nav-height: 60px;
+
+  /* ── Borders & Shadows ──────────────────────────────────── */
+  --border-thin: 1px solid var(--color-navy-primary);
+  --border-medium: 2px solid var(--color-navy-primary);
+  --border-accent: 2px solid var(--color-orange);
+  --shadow-offset: 4px 4px 0 var(--color-navy-primary);
+  --shadow-offset-sm: 2px 2px 0 var(--color-navy-primary);
+  --shadow-offset-lg: 6px 6px 0 var(--color-navy-primary);
+
+  /* ── Transitions ────────────────────────────────────────── */
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+  --transition-slow: 400ms ease;
+
+  /* ── Z-index ────────────────────────────────────────────── */
+  --z-background: -1;
+  --z-content: 1;
+  --z-nav: 100;
+  --z-modal: 200;
+  --z-tooltip: 300;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --transition-fast: 0ms;
+    --transition-base: 0ms;
+    --transition-slow: 0ms;
+  }
+}
