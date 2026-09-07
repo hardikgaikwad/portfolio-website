@@ -10,7 +10,7 @@ interface Props {
   name?: string;
 }
 
-export default function Footer({ socials, name = 'HARDIK' }: Props) {
+export default function Footer({ socials, name = 'Hardik Gaikwad' }: Props) {
   const currentYear = new Date().getFullYear();
 
   const scrollToTop = () => {

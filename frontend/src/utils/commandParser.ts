@@ -14,16 +14,17 @@ export interface CommandOutput {
 
 export interface CommandResult {
   outputs: CommandOutput[];
-  newPath?: string[];
   clear?: boolean;
+  newPath?: string[];
 }
 
 // All available commands
 const COMMANDS = [
   'help', 'ls', 'cd', 'pwd', 'cat', 'whoami', 'projects',
   'open', 'social', 'github', 'linkedin', 'email', 'resume',
-  'download', 'clear', 'history', 'theme', 'tree', 'echo',
-  'date', 'uname', 'neofetch',
+  'download', 'certifications', 'education', 'volunteering',
+  'skills', 'clear', 'history', 'tree', 'echo', 'date',
+  'uname', 'neofetch',
 ];
 
 /**
@@ -66,14 +67,23 @@ export function executeCommand(
     case 'social':
       return cmdSocial(social);
     case 'github':
-      return cmdOpenSocial('github', social);
+      return cmdOpenUrl('https://github.com/hardikgaikwad', 'Opening GitHub profile (https://github.com/hardikgaikwad)...');
     case 'linkedin':
-      return cmdOpenSocial('linkedin', social);
+      return cmdOpenUrl('https://linkedin.com/in/hardikgaikwad', 'Opening LinkedIn profile (https://linkedin.com/in/hardikgaikwad)...');
     case 'email':
       return cmdOpenSocial('email', social);
+    case 'certifications':
+      return cmdCertifications(profile);
+    case 'education':
+      return cmdEducation(profile);
+    case 'volunteering':
+      return cmdVolunteering(profile);
+    case 'skills':
+      return cmdSkills(fs);
     case 'resume':
+      return cmdResume(args, profile);
     case 'download':
-      return cmdResume(profile);
+      return cmdDownload(args, profile);
     case 'clear':
       return { outputs: [], clear: true };
     case 'history':
@@ -83,18 +93,16 @@ export function executeCommand(
     case 'echo':
       return { outputs: [{ type: 'text', content: args.join(' ') }] };
     case 'date':
-      return { outputs: [{ type: 'text', content: new Date().toString() }] };
+      return { outputs: [{ type: 'text', content: new Date().toUTCString() }] };
     case 'uname':
-      return { outputs: [{ type: 'text', content: 'PortfolioOS 1.0.0 x86_64 HARDIK-TERMINAL' }] };
+      return { outputs: [{ type: 'text', content: 'PortfolioOS 2.5.0-hardik-sec x86_64 GNU/Linux' }] };
     case 'neofetch':
       return cmdNeofetch(profile);
     case 'sudo':
-      return { outputs: [{ type: 'error', content: 'Permission denied. Nice try though.' }] };
-    case 'rm':
-      return { outputs: [{ type: 'error', content: 'Operation not permitted. This is a read-only filesystem.' }] };
+      return { outputs: [{ type: 'error', content: 'sudo: operative is not in the sudoers file. This incident will be logged.' }] };
     case 'hack':
     case 'exploit':
-      return { outputs: [{ type: 'error', content: 'Access denied. Ethical hacking only.' }] };
+      return { outputs: [{ type: 'system', content: '[*] Initiating ethical reconnaissance... Type "projects" to view security research and tools.' }] };
     default:
       return cmdNotFound(cmd);
   }
@@ -103,68 +111,70 @@ export function executeCommand(
 function cmdHelp(): CommandResult {
   return {
     outputs: [
-      { type: 'info', content: 'PORTFOLIO TERMINAL — AVAILABLE COMMANDS' },
-      { type: 'info', content: '═══════════════════════════════════════' },
+      { type: 'info', content: 'AVAILABLE TERMINAL COMMANDS' },
+      { type: 'info', content: '═══════════════════════════' },
       { type: 'text', content: '' },
-      { type: 'text', content: '  help          Show available commands' },
-      { type: 'text', content: '  ls [path]     List directory contents' },
-      { type: 'text', content: '  cd <path>     Navigate directories' },
-      { type: 'text', content: '  pwd           Print working directory' },
-      { type: 'text', content: '  cat <file>    Read file contents' },
-      { type: 'text', content: '  tree          Show directory tree' },
-      { type: 'text', content: '  whoami        Display profile info' },
-      { type: 'text', content: '  projects      List all projects' },
-      { type: 'text', content: '  open <slug>   View project detail' },
-      { type: 'text', content: '  social        Show social links' },
-      { type: 'text', content: '  github        Open GitHub profile' },
-      { type: 'text', content: '  linkedin      Open LinkedIn profile' },
-      { type: 'text', content: '  email         Open email' },
-      { type: 'text', content: '  resume        View/download resume' },
-      { type: 'text', content: '  clear         Clear terminal' },
-      { type: 'text', content: '  history       Show command history' },
-      { type: 'text', content: '  neofetch      System information' },
+      { type: 'system', content: 'NAVIGATION & FILESYSTEM:' },
+      { type: 'text', content: '  ls [path]             List directory contents' },
+      { type: 'text', content: '  cd <path>             Change directory (e.g. cd projects, cd ..)' },
+      { type: 'text', content: '  pwd                   Print working directory' },
+      { type: 'text', content: '  cat <file>            Display file contents (e.g. cat about.txt)' },
+      { type: 'text', content: '  tree                  Display directory tree' },
       { type: 'text', content: '' },
-      { type: 'system', content: 'Use Tab for autocomplete, Up/Down for history' },
+      { type: 'system', content: 'DOSSIER & PROFILE:' },
+      { type: 'text', content: '  whoami                Display operative credentials' },
+      { type: 'text', content: '  projects              List all technical projects and case files' },
+      { type: 'text', content: '  open <slug>           Inspect dossier (e.g. open privshare)' },
+      { type: 'text', content: '  certifications        Display eJPT and TryHackMe credentials' },
+      { type: 'text', content: '  education             Display academic background (JEC & Bal Bhavan)' },
+      { type: 'text', content: '  volunteering          Display VulnCon conference contributions' },
+      { type: 'text', content: '  skills                List technical arsenal categories' },
+      { type: 'text', content: '' },
+      { type: 'system', content: 'RESUME & LINKS:' },
+      { type: 'text', content: '  resume                Display resume tracks and options' },
+      { type: 'text', content: '  resume --security     Download Cybersecurity Resume (eJPT track)' },
+      { type: 'text', content: '  resume --software     Download Software Development Resume' },
+      { type: 'text', content: '  github                Open https://github.com/hardikgaikwad' },
+      { type: 'text', content: '  linkedin              Open https://linkedin.com/in/hardikgaikwad' },
+      { type: 'text', content: '  social                List all communication channels' },
+      { type: 'text', content: '' },
+      { type: 'system', content: 'SYSTEM & UTILITIES:' },
+      { type: 'text', content: '  neofetch              Display system banner & environment stats' },
+      { type: 'text', content: '  history               Show recent command history' },
+      { type: 'text', content: '  clear                 Clear the terminal screen (or Ctrl+L)' },
     ],
   };
 }
 
 function cmdLs(args: string[], currentPath: string[], fs: FSNode): CommandResult {
-  const target = args[0] || '.';
-  let node: FSNode;
+  const targetPath = args.length > 0
+    ? args[0].split('/').filter(Boolean)
+    : currentPath;
 
-  if (target === '.' || target === '') {
-    const { node: resolved } = resolvePath(fs, currentPath, '.');
-    node = resolved || fs;
-    // Re-navigate to current path
-    let tempNode = fs;
-    for (const p of currentPath) {
-      if (tempNode.children?.[p]) tempNode = tempNode.children[p];
-    }
-    node = tempNode;
-  } else {
-    const { node: resolved } = resolvePath(fs, currentPath, target);
-    if (!resolved) {
-      return { outputs: [{ type: 'error', content: `ls: cannot access '${target}': No such file or directory` }] };
-    }
-    node = resolved;
+  const { node } = resolvePath(targetPath, currentPath, fs);
+  if (!node) {
+    return { outputs: [{ type: 'error', content: `ls: cannot access '${args[0]}': No such file or directory` }] };
   }
 
   if (node.type === 'file') {
     return { outputs: [{ type: 'text', content: node.name }] };
   }
 
-  const items = listDir(node);
-  if (items.length === 0) {
-    return { outputs: [{ type: 'system', content: '(empty directory)' }] };
+  const entries = listDir(node);
+  if (entries.length === 0) {
+    return { outputs: [{ type: 'text', content: '(empty directory)' }] };
   }
 
-  const outputs: CommandOutput[] = items.map(item => ({
-    type: 'text' as const,
-    content: item.endsWith('/') ? `  \x1b[dir]${item}\x1b[/dir]` : `  ${item}`,
-  }));
+  const formatted = entries.map(entry => {
+    if (entry.endsWith('/')) {
+      return `\x1b[dir]${entry}\x1b[/dir]`;
+    }
+    return entry;
+  });
 
-  return { outputs };
+  return {
+    outputs: [{ type: 'text', content: formatted.join('   ') }],
+  };
 }
 
 function cmdCd(args: string[], currentPath: string[], fs: FSNode): CommandResult {
@@ -172,18 +182,18 @@ function cmdCd(args: string[], currentPath: string[], fs: FSNode): CommandResult
     return { outputs: [], newPath: [] };
   }
 
-  const target = args[0];
-  const { node, newPath } = resolvePath(fs, currentPath, target);
+  const targetPath = args[0].split('/').filter(Boolean);
+  const { node, resolvedPath } = resolvePath(targetPath, currentPath, fs);
 
   if (!node) {
-    return { outputs: [{ type: 'error', content: `cd: no such directory: ${target}` }] };
+    return { outputs: [{ type: 'error', content: `cd: ${args[0]}: No such file or directory` }] };
   }
 
   if (node.type !== 'dir') {
-    return { outputs: [{ type: 'error', content: `cd: not a directory: ${target}` }] };
+    return { outputs: [{ type: 'error', content: `cd: ${args[0]}: Not a directory` }] };
   }
 
-  return { outputs: [], newPath };
+  return { outputs: [], newPath: resolvedPath };
 }
 
 function cmdPwd(currentPath: string[]): CommandResult {
@@ -196,22 +206,15 @@ function cmdCat(args: string[], currentPath: string[], fs: FSNode): CommandResul
     return { outputs: [{ type: 'error', content: 'cat: missing file operand' }] };
   }
 
-  const target = args[0];
-  // Try with and without extension
-  const { node } = resolvePath(fs, currentPath, target);
-  
+  const targetPath = args[0].split('/').filter(Boolean);
+  const { node } = resolvePath(targetPath, currentPath, fs);
+
   if (!node) {
-    // Try adding .txt extension
-    const { node: nodeWithExt } = resolvePath(fs, currentPath, target + '.txt');
-    if (nodeWithExt && nodeWithExt.type === 'file') {
-      const lines = (nodeWithExt.content || '').split('\n');
-      return { outputs: lines.map(line => ({ type: 'text' as const, content: line })) };
-    }
-    return { outputs: [{ type: 'error', content: `cat: ${target}: No such file or directory` }] };
+    return { outputs: [{ type: 'error', content: `cat: ${args[0]}: No such file or directory` }] };
   }
 
   if (node.type === 'dir') {
-    return { outputs: [{ type: 'error', content: `cat: ${target}: Is a directory` }] };
+    return { outputs: [{ type: 'error', content: `cat: ${args[0]}: Is a directory` }] };
   }
 
   const lines = (node.content || '').split('\n');
@@ -219,120 +222,262 @@ function cmdCat(args: string[], currentPath: string[], fs: FSNode): CommandResul
 }
 
 function cmdWhoami(profile: Profile | null): CommandResult {
-  if (!profile) {
-    return { outputs: [{ type: 'text', content: 'visitor@portfolio' }] };
-  }
+  const name = profile?.name || 'Hardik Gaikwad';
+  const title = profile?.title || 'Cybersecurity Engineer & Software Developer';
   return {
     outputs: [
-      { type: 'info', content: profile.name },
-      { type: 'text', content: profile.title },
+      { type: 'info', content: `OPERATIVE: ${name.toUpperCase()}` },
+      { type: 'text', content: `ROLE:      ${title}` },
+      { type: 'text', content: 'CERTS:     eJPT Certified | TryHackMe Global Top 4%' },
+      { type: 'text', content: 'ACADEMIC:  B.Tech in Information Technology — Jabalpur Engineering College' },
+      { type: 'text', content: 'LOCATION:  Jabalpur, India' },
       { type: 'text', content: '' },
-      { type: 'text', content: profile.bio },
+      { type: 'system', content: 'IDENTITY TRACKS:' },
+      { type: 'text', content: '  [PRIMARY]   Offensive Security • Pentesting • Web Security • Vulnerability Assessment' },
+      { type: 'text', content: '  [SECONDARY] Software Engineering • Python / Django REST • React • Secure Architecture' },
       { type: 'text', content: '' },
-      { type: 'system', content: `SESSION: visitor | HOST: ${profile.name.toLowerCase()}-terminal` },
+      { type: 'system', content: `MOTTO: "BUILD IT. BREAK IT. SECURE IT."` },
     ],
   };
 }
 
 function cmdProjects(projects: Project[]): CommandResult {
   if (projects.length === 0) {
-    return { outputs: [{ type: 'text', content: 'No projects found.' }] };
+    return { outputs: [{ type: 'text', content: 'No projects found in database.' }] };
   }
 
   const outputs: CommandOutput[] = [
-    { type: 'info', content: 'PROJECTS' },
-    { type: 'info', content: '════════' },
+    { type: 'info', content: 'OPERATIONAL CASE FILES & PROJECTS' },
+    { type: 'info', content: '═════════════════════════════════' },
     { type: 'text', content: '' },
   ];
 
   projects.forEach((p, i) => {
     const num = String(i + 1).padStart(2, '0');
-    const featured = p.featured ? ' [FEATURED]' : '';
-    outputs.push({ type: 'text', content: `  ${num}. ${p.title}${featured}` });
+    const featured = p.featured ? ' [★ FEATURED]' : '';
+    const track = p.project_type ? ` [${p.project_type.toUpperCase()}]` : '';
+    outputs.push({ type: 'text', content: `  ${num}. ${p.title}${track}${featured}` });
     outputs.push({ type: 'system', content: `      ${p.short_description}` });
-    outputs.push({ type: 'system', content: `      TECH: ${p.technologies.join(', ')}` });
+    outputs.push({ type: 'system', content: `      TECH: ${p.technologies ? p.technologies.join(', ') : ''}` });
+    if (p.github_url) outputs.push({ type: 'link', content: `      REPO: ${p.github_url}`, url: p.github_url });
+    if (p.live_url) outputs.push({ type: 'link', content: `      LIVE: ${p.live_url}`, url: p.live_url });
     outputs.push({ type: 'text', content: '' });
   });
 
-  outputs.push({ type: 'system', content: 'Use "open <slug>" to view project details, or "cd projects && ls"' });
+  outputs.push({ type: 'system', content: 'Use "cat projects/<slug>" or "open <slug>" to view full architectural specification.' });
 
   return { outputs };
 }
 
-function cmdOpen(args: string[], projects: Project[], navigate?: (path: string) => void): CommandResult {
+function cmdOpen(args: string[], projects: Project[], _navigate?: (path: string) => void): CommandResult {
   if (args.length === 0) {
     return { outputs: [{ type: 'error', content: 'open: missing project slug. Usage: open <project-slug>' }] };
   }
 
   const slug = args[0].toLowerCase();
-  const project = projects.find(p => p.slug === slug);
+  const project = projects.find(p => p.slug === slug || p.title.toLowerCase() === slug);
 
   if (!project) {
     const available = projects.map(p => p.slug).join(', ');
     return {
       outputs: [
         { type: 'error', content: `open: project not found: ${slug}` },
-        { type: 'system', content: `Available: ${available}` },
+        { type: 'system', content: `Available projects: ${available}` },
       ],
     };
   }
 
-  if (navigate) {
-    navigate(`/project/${project.slug}`);
+  if (project.live_url) {
+    window.open(project.live_url, '_blank');
+    return { outputs: [{ type: 'info', content: `Launching live deployment: ${project.title} (${project.live_url})...` }] };
+  } else if (project.github_url) {
+    window.open(project.github_url, '_blank');
+    return { outputs: [{ type: 'info', content: `Opening repository: ${project.title} (${project.github_url})...` }] };
   }
 
   return {
     outputs: [
-      { type: 'info', content: `Opening project: ${project.title}...` },
+      { type: 'info', content: `Dossier selected: ${project.title}` },
+      { type: 'text', content: project.short_description },
     ],
   };
 }
 
-function cmdSocial(social: SocialLink[]): CommandResult {
-  if (social.length === 0) {
-    return { outputs: [{ type: 'text', content: 'No social links configured.' }] };
+function cmdCertifications(_profile: Profile | null): CommandResult {
+  return {
+    outputs: [
+      { type: 'info', content: 'CERTIFICATIONS & SECURITY RECOGNITION' },
+      { type: 'info', content: '════════════════════════════════════' },
+      { type: 'text', content: '' },
+      { type: 'text', content: '1. eJPT (eLearnSecurity Junior Penetration Tester) — Certificate' },
+      { type: 'system', content: '   Conducted full kill-chain penetration tests across segmented networks.' },
+      { type: 'system', content: '   Hands-on assessments: credential attacks, exploitation, privilege escalation, pivoting.' },
+      { type: 'text', content: '' },
+      { type: 'text', content: '2. TryHackMe Security Learning Paths — Global Top 4%' },
+      { type: 'system', content: '   Completed Pre Security, Cyber Security 101, and Jr Penetration Tester paths.' },
+      { type: 'system', content: '   Covers network fundamentals, exploitation techniques, and web application attacks.' },
+    ],
+  };
+}
+
+function cmdEducation(_profile: Profile | null): CommandResult {
+  return {
+    outputs: [
+      { type: 'info', content: 'ACADEMIC FORMATION' },
+      { type: 'info', content: '══════════════════' },
+      { type: 'text', content: '' },
+      { type: 'text', content: '1. Jabalpur Engineering College — B.Tech in Information Technology' },
+      { type: 'system', content: '   Period: 2023 – 2027 | Jabalpur, India' },
+      { type: 'system', content: '   Academic Metric: CGPA 7.69 (up to 6th Semester)' },
+      { type: 'text', content: '' },
+      { type: 'text', content: '2. Bal Bhavan School — CBSE' },
+      { type: 'system', content: '   Class XII: 90.8% | Class X: 90.2% | Bhopal, India' },
+    ],
+  };
+}
+
+function cmdVolunteering(_profile: Profile | null): CommandResult {
+  return {
+    outputs: [
+      { type: 'info', content: 'VOLUNTEERING & LEADERSHIP' },
+      { type: 'info', content: '════════════════════════' },
+      { type: 'text', content: '' },
+      { type: 'text', content: 'VulnCon - Security Conference (Core Team Member)' },
+      { type: 'system', content: '  • Contributed to video editing and media content creation.' },
+      { type: 'system', content: '  • Point of contact between Media and Social Media teams.' },
+      { type: 'system', content: '  • Guided photographers/videographers and coordinated on-site event logistics.' },
+    ],
+  };
+}
+
+function cmdSkills(fs: FSNode): CommandResult {
+  const skillsNode = fs.children?.['skills.txt'];
+  if (skillsNode && skillsNode.content) {
+    return {
+      outputs: [
+        { type: 'info', content: 'TECHNICAL ARSENAL MATRIX' },
+        { type: 'info', content: '════════════════════════' },
+        ...skillsNode.content.split('\n').map(c => ({ type: 'text' as const, content: c })),
+      ],
+    };
+  }
+  return { outputs: [{ type: 'text', content: 'Type "cat skills.txt" or "ls skills" to view skills matrix.' }] };
+}
+
+function cmdResume(args: string[], profile: Profile | null): CommandResult {
+  const flag = args[0]?.toLowerCase();
+
+  const secUrl = profile?.resume_security_url || profile?.resume_url || '/media/resume/hardik_gaikwad_cybersecurity.pdf';
+  const softUrl = profile?.resume_software_url || profile?.resume_url || '/media/resume/hardik_gaikwad_software.pdf';
+
+  if (flag === '--security' || flag === '-s') {
+    window.open(secUrl, '_blank');
+    return {
+      outputs: [
+        { type: 'info', content: 'Downloading cybersecurity resume...' },
+        { type: 'link', content: `LINK: ${secUrl}`, url: secUrl },
+      ],
+    };
   }
 
+  if (flag === '--software' || flag === '-d') {
+    window.open(softUrl, '_blank');
+    return {
+      outputs: [
+        { type: 'info', content: 'Downloading software development resume...' },
+        { type: 'link', content: `LINK: ${softUrl}`, url: softUrl },
+      ],
+    };
+  }
+
+  return {
+    outputs: [
+      { type: 'info', content: 'HARDIK GAIKWAD — DUAL-TRACK RESUME REPOSITORY' },
+      { type: 'info', content: '═══════════════════════════════════════════' },
+      { type: 'text', content: '' },
+      { type: 'text', content: 'Select which resume version to download:' },
+      { type: 'text', content: '' },
+      { type: 'system', content: '  1. CYBERSECURITY TRACK (eJPT, TryHackMe Top 4%, Pentesting, AppSec)' },
+      { type: 'link', content: '     Command: download resume --security', url: secUrl },
+      { type: 'text', content: '' },
+      { type: 'system', content: '  2. SOFTWARE ENGINEERING TRACK (Django, React, AWS S3, E2EE, Python)' },
+      { type: 'link', content: '     Command: download resume --software', url: softUrl },
+      { type: 'text', content: '' },
+      { type: 'system', content: 'Usage example: resume --security  OR  download resume --software' },
+    ],
+  };
+}
+
+function cmdDownload(args: string[], profile: Profile | null): CommandResult {
+  if (args.length === 0 || args[0].toLowerCase() === 'resume') {
+    const subArgs = args[0]?.toLowerCase() === 'resume' ? args.slice(1) : args;
+    return cmdResume(subArgs, profile);
+  }
+
+  const target = args[0].toLowerCase();
+  if (target === 'cybersecurity.pdf' || target === '--security') {
+    return cmdResume(['--security'], profile);
+  }
+  if (target === 'software-development.pdf' || target === '--software') {
+    return cmdResume(['--software'], profile);
+  }
+
+  return cmdResume(args, profile);
+}
+
+function cmdSocial(_social: SocialLink[]): CommandResult {
   const outputs: CommandOutput[] = [
-    { type: 'info', content: 'SOCIAL LINKS' },
-    { type: 'info', content: '════════════' },
+    { type: 'info', content: 'COMMUNICATIONS CHANNELS' },
+    { type: 'info', content: '═══════════════════════' },
     { type: 'text', content: '' },
   ];
 
-  social.forEach(link => {
-    outputs.push({
-      type: 'link',
-      content: `  ${(link.platform_display || link.platform).padEnd(12)} ${link.url}`,
-      url: link.platform === 'email' ? `mailto:${link.url}` : link.url,
-    });
+  outputs.push({
+    type: 'link',
+    content: '  GitHub:    https://github.com/hardikgaikwad',
+    url: 'https://github.com/hardikgaikwad',
+  });
+  outputs.push({
+    type: 'link',
+    content: '  LinkedIn:  https://linkedin.com/in/hardikgaikwad',
+    url: 'https://linkedin.com/in/hardikgaikwad',
+  });
+  outputs.push({
+    type: 'link',
+    content: '  Email:     mailto:hardikgaikwad04@gmail.com',
+    url: 'mailto:hardikgaikwad04@gmail.com',
   });
 
   return { outputs };
 }
 
-function cmdOpenSocial(platform: string, social: SocialLink[]): CommandResult {
-  const link = social.find(s => s.platform === platform);
-  if (!link) {
-    return { outputs: [{ type: 'error', content: `${platform}: not configured` }] };
-  }
-
-  const url = platform === 'email' ? `mailto:${link.url}` : link.url;
+function cmdOpenUrl(url: string, message: string): CommandResult {
   window.open(url, '_blank');
-
   return {
-    outputs: [{ type: 'info', content: `Opening ${link.platform_display || platform}...` }],
+    outputs: [
+      { type: 'info', content: message },
+      { type: 'link', content: `Opened: ${url}`, url },
+    ],
   };
 }
 
-function cmdResume(profile: Profile | null): CommandResult {
-  if (!profile?.resume_url) {
-    return { outputs: [{ type: 'system', content: 'Resume not uploaded. Configure via admin portal.' }] };
+function cmdOpenSocial(platform: string, social: SocialLink[]): CommandResult {
+  const link = social.find(s => s.platform === platform);
+  if (link) {
+    const url = platform === 'email' ? `mailto:${link.url}` : link.url;
+    window.open(url, '_blank');
+    return {
+      outputs: [{ type: 'info', content: `Opening ${link.platform_display || platform} (${link.url})...` }],
+    };
   }
 
-  window.open(profile.resume_url, '_blank');
-  return {
-    outputs: [{ type: 'info', content: 'Opening resume for download...' }],
-  };
+  if (platform === 'email') {
+    const mailto = 'mailto:hardikgaikwad04@gmail.com';
+    window.open(mailto, '_blank');
+    return { outputs: [{ type: 'info', content: `Opening mailto:hardikgaikwad04@gmail.com...` }] };
+  }
+
+  return { outputs: [{ type: 'error', content: `${platform}: channel not found` }] };
 }
 
 function cmdHistory(history: string[]): CommandResult {
@@ -381,33 +526,35 @@ function cmdTree(currentPath: string[], fs: FSNode): CommandResult {
 }
 
 function cmdNeofetch(profile: Profile | null): CommandResult {
-  const name = profile?.name || 'PORTFOLIO';
+  const name = profile?.name || 'Hardik Gaikwad';
+
   return {
     outputs: [
       { type: 'info', content: '  ┌─────────────────────┐' },
-      { type: 'info', content: '  │   ╔═══╗  ╔═══╗      │' },
-      { type: 'info', content: '  │   ║   ║  ║   ║      │' },
-      { type: 'info', content: '  │   ╚═══╝  ╚═══╝      │' },
-      { type: 'info', content: '  │      ╔═══╗          │' },
-      { type: 'info', content: '  │      ║   ║          │' },
-      { type: 'info', content: '  │      ╚═══╝          │' },
+      { type: 'info', content: '  │      ████████       │' },
+      { type: 'info', content: '  │    ████    ████     │' },
+      { type: 'info', content: '  │   ██   ████   ██    │' },
+      { type: 'info', content: '  │   ██   ████   ██    │' },
+      { type: 'info', content: '  │    ████    ████     │' },
+      { type: 'info', content: '  │      ████████       │' },
       { type: 'info', content: '  └─────────────────────┘' },
       { type: 'text', content: '' },
-      { type: 'text', content: `  USER:    visitor` },
-      { type: 'text', content: `  HOST:    ${name.toLowerCase()}-terminal` },
-      { type: 'text', content: `  OS:      PortfolioOS 1.0.0` },
-      { type: 'text', content: `  KERNEL:  React 19.x` },
-      { type: 'text', content: `  SHELL:   portfolio-sh` },
-      { type: 'text', content: `  UPTIME:  ${Math.floor(performance.now() / 1000)}s` },
-      { type: 'text', content: `  BACKEND: Django REST Framework` },
+      { type: 'text', content: `  OPERATIVE:  ${name}` },
+      { type: 'text', content: `  HOST:       hardik-security-workstation` },
+      { type: 'text', content: `  OS:         PortfolioOS 2.5.0 (Debian / Linux)` },
+      { type: 'text', content: `  KERNEL:     Linux 6.8.0-kali x86_64` },
+      { type: 'text', content: `  SHELL:      portfolio-sh (v2.5)` },
+      { type: 'text', content: `  EDUCATION:  B.Tech IT (Jabalpur Engineering College)` },
+      { type: 'text', content: `  CERTS:      eJPT | TryHackMe Global Top 4%` },
+      { type: 'text', content: `  THEME:      Retro College-Poster x Cyber Terminal` },
+      { type: 'text', content: `  MOTTO:      BUILD IT. BREAK IT. SECURE IT.` },
       { type: 'text', content: '' },
-      { type: 'system', content: `  ████████████████ SYSTEM ONLINE` },
+      { type: 'system', content: `  [✓] ALL DEFENSIVE & OFFENSIVE MONITORS NOMINAL` },
     ],
   };
 }
 
 function cmdNotFound(cmd: string): CommandResult {
-  // Suggest closest command
   const suggestions = COMMANDS.filter(c =>
     c.startsWith(cmd[0]) || c.includes(cmd.slice(0, 3))
   ).slice(0, 3);
@@ -420,7 +567,7 @@ function cmdNotFound(cmd: string): CommandResult {
     outputs.push({ type: 'system', content: `Did you mean: ${suggestions.join(', ')}?` });
   }
 
-  outputs.push({ type: 'system', content: "Type 'help' to see available commands." });
+  outputs.push({ type: 'system', content: "Type 'help' to see all available commands." });
 
   return { outputs };
 }
@@ -428,15 +575,14 @@ function cmdNotFound(cmd: string): CommandResult {
 /**
  * Get autocomplete suggestions for a partial command.
  */
-export function getCompletions(partial: string, currentPath: string[], fs: FSNode): string[] {
-  const parts = partial.split(/\s+/);
+export function getCompletions(input: string, currentPath: string[], fs: FSNode): string[] {
+  const trimmed = input.trimStart();
+  const parts = trimmed.split(/\s+/);
 
   if (parts.length <= 1) {
-    // Complete command names
     return COMMANDS.filter(c => c.startsWith(parts[0].toLowerCase()));
   }
 
-  // Complete file/directory names
   const cmd = parts[0].toLowerCase();
   const target = parts[parts.length - 1];
 

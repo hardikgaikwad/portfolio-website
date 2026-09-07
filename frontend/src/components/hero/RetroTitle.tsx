@@ -11,11 +11,18 @@ interface Props {
 }
 
 export default function RetroTitle({ text, className = '' }: Props) {
+  const words = text.trim().split(/\s+/);
+  const isMultiLine = words.length >= 2;
+  const line1 = isMultiLine ? words[0].toUpperCase() : text.toUpperCase();
+  const line2 = isMultiLine ? words.slice(1).join(' ').toUpperCase() : '';
+
+  const viewBoxHeight = isMultiLine ? 240 : 160;
+
   return (
     <div className={`retro-title ${className}`} aria-label={text}>
       <svg
         className="retro-title__svg"
-        viewBox="0 0 800 160"
+        viewBox={`0 0 800 ${viewBoxHeight}`}
         xmlns="http://www.w3.org/2000/svg"
         role="img"
         aria-hidden="true"
@@ -31,7 +38,7 @@ export default function RetroTitle({ text, className = '' }: Props) {
           {/* Horizontal line texture pattern */}
           <pattern id="retroLines" patternUnits="userSpaceOnUse" width="4" height="4">
             <rect width="4" height="4" fill="transparent" />
-            <line x1="0" y1="2" x2="4" y2="2" stroke="rgba(0,0,0,0.12)" strokeWidth="1" />
+            <line x1="0" y1="2" x2="4" y2="2" stroke="rgba(0,0,0,0.14)" strokeWidth="1" />
           </pattern>
 
           {/* Distressed noise filter */}
@@ -40,60 +47,58 @@ export default function RetroTitle({ text, className = '' }: Props) {
             <feColorMatrix type="saturate" values="0" in="noise" result="grayNoise" />
             <feBlend in="SourceGraphic" in2="grayNoise" mode="multiply" result="blended" />
           </filter>
-
-          {/* Combined: gradient + line texture */}
-          <pattern id="retroFill" patternUnits="userSpaceOnUse" width="4" height="4">
-            <rect width="4" height="4" fill="url(#retroGradient)" />
-            <line x1="0" y1="1.5" x2="4" y2="1.5" stroke="rgba(255,200,100,0.3)" strokeWidth="0.8" />
-            <line x1="0" y1="3" x2="4" y2="3" stroke="rgba(0,0,0,0.08)" strokeWidth="0.5" />
-          </pattern>
         </defs>
 
-        {/* Shadow layer — offset navy */}
-        <text
-          className="retro-title__shadow"
-          x="50%"
-          y="55%"
-          textAnchor="middle"
-          dominantBaseline="central"
-          dx="5"
-          dy="5"
-        >
-          {text}
-        </text>
+        {isMultiLine ? (
+          <>
+            {/* Line 1: HARDIK */}
+            <g transform="translate(0, 15)">
+              <text className="retro-title__shadow" x="50%" y="36%" textAnchor="middle" dominantBaseline="central" dx="5" dy="5">
+                {line1}
+              </text>
+              <text className="retro-title__outline" x="50%" y="36%" textAnchor="middle" dominantBaseline="central">
+                {line1}
+              </text>
+              <text className="retro-title__fill" x="50%" y="36%" textAnchor="middle" dominantBaseline="central">
+                {line1}
+              </text>
+              <text className="retro-title__texture" x="50%" y="36%" textAnchor="middle" dominantBaseline="central">
+                {line1}
+              </text>
+            </g>
 
-        {/* Navy outline layer */}
-        <text
-          className="retro-title__outline"
-          x="50%"
-          y="55%"
-          textAnchor="middle"
-          dominantBaseline="central"
-        >
-          {text}
-        </text>
-
-        {/* Main gradient fill layer */}
-        <text
-          className="retro-title__fill"
-          x="50%"
-          y="55%"
-          textAnchor="middle"
-          dominantBaseline="central"
-        >
-          {text}
-        </text>
-
-        {/* Line texture overlay */}
-        <text
-          className="retro-title__texture"
-          x="50%"
-          y="55%"
-          textAnchor="middle"
-          dominantBaseline="central"
-        >
-          {text}
-        </text>
+            {/* Line 2: GAIKWAD */}
+            <g transform="translate(0, 15)">
+              <text className="retro-title__shadow" x="50%" y="82%" textAnchor="middle" dominantBaseline="central" dx="5" dy="5">
+                {line2}
+              </text>
+              <text className="retro-title__outline" x="50%" y="82%" textAnchor="middle" dominantBaseline="central">
+                {line2}
+              </text>
+              <text className="retro-title__fill" x="50%" y="82%" textAnchor="middle" dominantBaseline="central">
+                {line2}
+              </text>
+              <text className="retro-title__texture" x="50%" y="82%" textAnchor="middle" dominantBaseline="central">
+                {line2}
+              </text>
+            </g>
+          </>
+        ) : (
+          <>
+            <text className="retro-title__shadow" x="50%" y="55%" textAnchor="middle" dominantBaseline="central" dx="5" dy="5">
+              {line1}
+            </text>
+            <text className="retro-title__outline" x="50%" y="55%" textAnchor="middle" dominantBaseline="central">
+              {line1}
+            </text>
+            <text className="retro-title__fill" x="50%" y="55%" textAnchor="middle" dominantBaseline="central">
+              {line1}
+            </text>
+            <text className="retro-title__texture" x="50%" y="55%" textAnchor="middle" dominantBaseline="central">
+              {line1}
+            </text>
+          </>
+        )}
       </svg>
     </div>
   );

@@ -165,30 +165,158 @@
   color: var(--color-ink-light, #2d3748);
 }
 
-.dossier-action {
-  margin-top: 16px;
+.dossier-edu-block {
+  border-top: 1px dashed rgba(0, 31, 63, 0.2);
+  padding-top: 16px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.dossier-edu-item {
+  background: #f7f4ea;
+  border-left: 3px solid #1e3a8a;
+  padding: 8px 12px;
+}
+
+.dossier-edu-title {
+  font-family: var(--font-display, serif);
+  font-size: 1.05rem;
+  color: var(--color-ink, #001f3f);
+  margin-bottom: 2px;
+}
+
+.dossier-edu-meta {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.74rem;
+  color: #2563eb;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.dossier-edu-score {
+  font-family: var(--font-body, sans-serif);
+  font-size: 0.85rem;
+  color: var(--color-ink-light, #334155);
+}
+
+.dossier-action-group {
+  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .dossier-resume-btn {
-  display: inline-block;
+  display: block;
+  text-align: center;
   background: #fff;
   color: var(--color-ink, #001f3f);
   border: 2px solid var(--color-ink, #001f3f);
-  padding: 8px 18px;
+  padding: 9px 14px;
   font-family: var(--font-mono, monospace);
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 800;
   text-decoration: none;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   box-shadow: 3px 3px 0px var(--color-ink, #001f3f);
   transition: all 0.15s ease;
 }
 
-.dossier-resume-btn:hover {
+.dossier-resume-btn--primary {
   background: var(--color-ink, #001f3f);
   color: #fff;
+}
+
+.dossier-resume-btn--primary:hover {
+  background: #1e3a8a;
   transform: translate(-1px, -1px);
   box-shadow: 4px 4px 0px var(--color-ink, #001f3f);
+}
+
+.dossier-resume-btn--secondary {
+  background: #fff;
+  color: var(--color-ink, #001f3f);
+}
+
+.dossier-resume-btn--secondary:hover {
+  background: #f1f5f9;
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0px var(--color-ink, #001f3f);
+}
+
+/* Certs & Volunteering */
+.intel-certs {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.intel-cert-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  background: #fdfbf7;
+  border: 1px solid rgba(0, 31, 63, 0.18);
+  padding: 10px 12px;
+}
+
+.intel-cert-badge {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  font-weight: 900;
+  background: #fef08a;
+  color: #854d0e;
+  border: 1px solid #ca8a04;
+  padding: 4px 8px;
+  letter-spacing: 0.06em;
+  border-radius: 2px;
+}
+
+.intel-cert-name {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--color-ink, #001f3f);
+  margin-bottom: 4px;
+}
+
+.intel-cert-desc {
+  font-family: var(--font-body, sans-serif);
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: var(--color-ink-light, #334155);
+  margin: 0;
+}
+
+.intel-vol-title {
+  font-family: var(--font-display, serif);
+  font-size: 1.15rem;
+  color: var(--color-ink, #001f3f);
+  margin-bottom: 2px;
+}
+
+.intel-vol-role {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #2563eb;
+  margin-bottom: 6px;
+}
+
+.intel-vol-desc {
+  font-family: var(--font-body, sans-serif);
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--color-ink-light, #334155);
+  margin: 0;
+}
+
+.intel-panel__status--gold {
+  background: #fef08a;
+  color: #854d0e;
+  border-color: #ca8a04;
 }
 
 /* Intel Panels */

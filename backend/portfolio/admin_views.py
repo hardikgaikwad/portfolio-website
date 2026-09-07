@@ -171,17 +171,46 @@ class AdminResumeUploadView(APIView):
 
         profile = Profile.objects.first()
         if not profile:
-            profile = Profile.objects.create(name='Your Name', title='Your Title')
+            profile = Profile.objects.create(name='Hardik Gaikwad', title='Cybersecurity Engineer / Developer')
 
-        # Delete old resume file if exists
-        if profile.resume_file:
-            profile.resume_file.delete(save=False)
+        resume_type = request.data.get('resume_type', 'general')
 
-        profile.resume_file = resume_file
+        if resume_type == 'security':
+            if profile.resume_security:
+                profile.resume_security.delete(save=False)
+            profile.resume_security = resume_file
+        elif resume_type == 'software':
+            if profile.resume_software:
+                profile.resume_software.delete(save=False)
+            profile.resume_software = resume_file
+        else:
+            if profile.resume_file:
+                profile.resume_file.delete(save=False)
+            profile.resume_file = resume_file
+
         profile.save()
 
         serializer = ProfileAdminSerializer(profile, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+# ──────────────────────────────────────────────────────────────
+# GitHub Synchronization
+# ──────────────────────────────────────────────────────────────
+
+class AdminGitHubSyncView(APIView):
+    """
+    POST /api/admin/github/sync/ — Fetch & synchronize repositories from GitHub
+    """
+    permission_classes = [IsAdminUser]
+
+    def post(self, request):
+        from .github_sync import sync_github_projects
+        try:
+            results = sync_github_projects(auto_publish_featured=True)
+            return Response({'status': 'success', 'synced': results}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'status': 'error', 'detail': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 # ──────────────────────────────────────────────────────────────

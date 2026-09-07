@@ -8,6 +8,7 @@ import { useAuth } from './hooks/useAuth';
 
 // Layout & Sections
 import Navigation from './components/layout/Navigation';
+import ProceduralGridCanvas from './components/layout/ProceduralGridCanvas';
 import HeroSection from './components/hero/HeroSection';
 import Terminal from './components/terminal/Terminal';
 import ProjectsSection from './components/projects/ProjectsSection';
@@ -25,6 +26,7 @@ function MainPortfolio() {
 
   return (
     <div className="portfolio-app">
+      <ProceduralGridCanvas />
       <Navigation />
 
       <main>
@@ -54,11 +56,16 @@ function MainPortfolio() {
 function AdminRoute() {
   const { isAuthenticated, loading, error, login, logout } = useAuth();
 
-  if (isAuthenticated) {
-    return <AdminDashboard onLogout={logout} />;
-  }
-
-  return <AdminLogin onLogin={login} loading={loading} error={error} />;
+  return (
+    <>
+      <ProceduralGridCanvas />
+      {isAuthenticated ? (
+        <AdminDashboard onLogout={logout} />
+      ) : (
+        <AdminLogin onLogin={login} loading={loading} error={error} />
+      )}
+    </>
+  );
 }
 
 export default function App() {

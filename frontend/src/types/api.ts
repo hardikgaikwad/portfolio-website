@@ -2,6 +2,27 @@
    API Types — Portfolio Data Models
    ═══════════════════════════════════════════════════════════ */
 
+export interface EducationItem {
+  institution: string;
+  degree: string;
+  period: string;
+  grade: string;
+  location: string;
+}
+
+export interface CertificationItem {
+  title: string;
+  issuer: string;
+  type: string;
+  description: string;
+}
+
+export interface VolunteeringItem {
+  organization: string;
+  role: string;
+  description: string;
+}
+
 export interface Profile {
   id: number;
   name: string;
@@ -12,7 +33,12 @@ export interface Profile {
   location: string;
   focus_areas: string[];
   currently_doing: string[];
+  education?: EducationItem[];
+  certifications?: CertificationItem[];
+  volunteering?: VolunteeringItem[];
   resume_url: string | null;
+  resume_security_url?: string | null;
+  resume_software_url?: string | null;
   updated_at: string;
 }
 
@@ -30,7 +56,11 @@ export interface Project {
   featured: boolean;
   display_order: number;
   status: 'active' | 'completed' | 'in_progress' | 'archived';
+  project_type?: 'security' | 'software' | 'fullstack' | 'research' | 'lab' | 'other';
   security_category?: string;
+  repo_name?: string;
+  github_stars?: number;
+  is_github_synced?: boolean;
   role?: string;
   highlights?: string[];
   challenges?: string;

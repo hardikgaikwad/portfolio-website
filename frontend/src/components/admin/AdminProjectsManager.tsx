@@ -9,6 +9,7 @@ import {
   adminCreateProject,
   adminUpdateProject,
   adminDeleteProject,
+  adminSyncGitHub,
 } from '../../services/api';
 
 export default function AdminProjectsManager() {
@@ -25,6 +26,19 @@ export default function AdminProjectsManager() {
       setProjects(data);
     } catch {
       setFeedback('Failed to load projects from server.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSyncGitHub = async () => {
+    try {
+      setLoading(true);
+      const res = await adminSyncGitHub();
+      setFeedback(`GitHub sync successful: ${res.synced?.length || 0} repositories synchronized with portfolio.`);
+      loadProjects();
+    } catch {
+      setFeedback('Failed to sync with GitHub API.');
     } finally {
       setLoading(false);
     }
@@ -121,9 +135,14 @@ export default function AdminProjectsManager() {
           <h3 className="admin-manager__title">PROJECTS & CASE FILES</h3>
           <p className="admin-manager__subtitle">Manage project records, visibility, and technical dossiers.</p>
         </div>
-        <button onClick={handleStartCreate} className="admin-btn admin-btn--primary">
-          + NEW DOSSIER
-        </button>
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <button onClick={handleSyncGitHub} className="admin-btn" title="Fetch repositories from github.com/hardikgaikwad">
+            🔄 SYNC GITHUB
+          </button>
+          <button onClick={handleStartCreate} className="admin-btn admin-btn--primary">
+            + NEW DOSSIER
+          </button>
+        </div>
       </div>
 
       {feedback && (

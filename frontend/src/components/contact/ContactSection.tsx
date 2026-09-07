@@ -21,7 +21,7 @@ export default function ContactSection({ profile, socials }: Props) {
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent'>('idle');
   const [copied, setCopied] = useState(false);
 
-  const email = profile?.email || 'hardik@example.com';
+  const email = profile?.email || 'hardikgaikwad04@gmail.com';
 
   const handleCopyEmail = () => {
     navigator.clipboard.writeText(email);

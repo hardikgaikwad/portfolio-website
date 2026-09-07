@@ -132,12 +132,16 @@ export const adminUpdateSocialLink = (id: number, data: Record<string, unknown>)
 export const adminDeleteSocialLink = (id: number) =>
   api.delete(`/admin/social/${id}/`);
 
-export const adminUploadResume = (file: File) => {
+export const adminUploadResume = (file: File, resumeType: 'general' | 'security' | 'software' = 'general') => {
   const formData = new FormData();
   formData.append('resume_file', file);
+  formData.append('resume_type', resumeType);
   return api.post('/admin/resume/', formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
   }).then(r => r.data);
 };
+
+export const adminSyncGitHub = () =>
+  api.post<{ status: string; synced: Array<{ name: string; action: string; status: string }> }>('/admin/github/sync/').then(r => r.data);
 
 export default api;

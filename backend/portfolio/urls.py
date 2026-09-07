@@ -25,5 +25,6 @@ urlpatterns = [
     path('admin/social/', admin_views.AdminSocialLinkListView.as_view(), name='admin-social-list'),
     path('admin/social/<int:pk>/', admin_views.AdminSocialLinkDetailView.as_view(), name='admin-social-detail'),
     path('admin/resume/', admin_views.AdminResumeUploadView.as_view(), name='admin-resume-upload'),
+    path('admin/github/sync/', admin_views.AdminGitHubSyncView.as_view(), name='admin-github-sync'),
     path('admin/site-settings/', admin_views.AdminSiteSettingsView.as_view(), name='admin-site-settings'),
 ]

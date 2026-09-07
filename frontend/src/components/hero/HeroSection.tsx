@@ -42,7 +42,7 @@ export default function HeroSection({ profile, loading }: Props) {
     return () => timers.forEach(clearTimeout);
   }, [loading]);
 
-  const name = profile?.name || 'HARDIK';
+  const name = profile?.name || 'HARDIK GAIKWAD';
   const subtitle = profile?.subtitle || 'CYBERSECURITY . SOFTWARE ENGINEERING . OFFENSIVE SECURITY';
 
   return (

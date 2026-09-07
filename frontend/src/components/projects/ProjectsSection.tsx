@@ -14,7 +14,7 @@ interface Props {
 
 export default function ProjectsSection({ projects }: Props) {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-  const [activeFilter, setActiveFilter] = useState<'ALL' | 'FEATURED' | string>('ALL');
+  const [activeFilter, setActiveFilter] = useState<'ALL' | 'FEATURED' | 'SECURITY' | 'SOFTWARE' | 'LAB' | string>('ALL');
   const [searchQuery, setSearchQuery] = useState('');
 
   // Extract distinct categories or security domains
@@ -28,18 +28,26 @@ export default function ProjectsSection({ projects }: Props) {
 
   const filteredProjects = useMemo(() => {
     return projects.filter((p) => {
-      // Filter by tag/category
+      // Filter by tag/category/track
       if (activeFilter === 'FEATURED' && !p.featured) return false;
-      if (activeFilter !== 'ALL' && activeFilter !== 'FEATURED' && p.security_category !== activeFilter) {
+      if (activeFilter === 'SECURITY' && p.project_type !== 'security') return false;
+      if (activeFilter === 'SOFTWARE' && p.project_type !== 'software') return false;
+      if (activeFilter === 'LAB' && p.project_type !== 'lab') return false;
+      if (
+        !['ALL', 'FEATURED', 'SECURITY', 'SOFTWARE', 'LAB'].includes(activeFilter) &&
+        p.security_category !== activeFilter
+      ) {
         return false;
       }
+
       // Filter by search query
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase();
         const matchesTitle = p.title.toLowerCase().includes(q);
         const matchesDesc = p.short_description.toLowerCase().includes(q);
-        const matchesTech = p.technologies.some((t) => t.toLowerCase().includes(q));
-        return matchesTitle || matchesDesc || matchesTech;
+        const matchesTech = p.technologies ? p.technologies.some((t) => t.toLowerCase().includes(q)) : false;
+        const matchesCategory = p.security_category ? p.security_category.toLowerCase().includes(q) : false;
+        return matchesTitle || matchesDesc || matchesTech || matchesCategory;
       }
       return true;
     });
@@ -53,7 +61,7 @@ export default function ProjectsSection({ projects }: Props) {
           <div className="section-header__tag">INDEX REF: SEC-03 // ENGINEERING PORTFOLIO</div>
           <h2 className="section-title">PROJECT DOSSIER</h2>
           <p className="section-subtitle">
-            Curated systems, offensive/defensive cybersecurity tools, web applications, and research prototypes.
+            Curated systems, offensive/defensive cybersecurity tools, web applications, and research environments. Synchronized from GitHub and internal case archives.
           </p>
         </div>
 
@@ -72,7 +80,27 @@ export default function ProjectsSection({ projects }: Props) {
             >
               ★ FEATURED ({projects.filter((p) => p.featured).length})
             </button>
-            {categories.map((cat) => (
+            <button
+              className={`filter-btn ${activeFilter === 'SECURITY' ? 'filter-btn--active' : ''}`}
+              onClick={() => setActiveFilter('SECURITY')}
+            >
+              [OFFSEC & SEC]
+            </button>
+            <button
+              className={`filter-btn ${activeFilter === 'SOFTWARE' ? 'filter-btn--active' : ''}`}
+              onClick={() => setActiveFilter('SOFTWARE')}
+            >
+              [SOFTWARE DEV]
+            </button>
+            {projects.some(p => p.project_type === 'lab') && (
+              <button
+                className={`filter-btn ${activeFilter === 'LAB' ? 'filter-btn--active' : ''}`}
+                onClick={() => setActiveFilter('LAB')}
+              >
+                [LAB / NETWORK]
+              </button>
+            )}
+            {categories.slice(0, 3).map((cat) => (
               <button
                 key={cat}
                 className={`filter-btn ${activeFilter === cat ? 'filter-btn--active' : ''}`}

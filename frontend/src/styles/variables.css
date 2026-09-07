@@ -2,6 +2,19 @@
    DESIGN TOKENS — Portfolio Design System
    ═══════════════════════════════════════════════════════════ */
 
+@font-face {
+  font-family: 'Thugolatz';
+  src: local('Thugolatz'),
+       local('Thugolatz Regular'),
+       local('Thugolatz-Regular'),
+       url('/fonts/Thugolatz.woff2') format('woff2'),
+       url('/fonts/Thugolatz.woff') format('woff'),
+       url('/fonts/Thugolatz.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   /* ── Color Palette ──────────────────────────────────────── */
   --color-navy-primary: #183F68;
@@ -42,7 +55,7 @@
   --color-term-border: #1E3450;
 
   /* ── Typography ─────────────────────────────────────────── */
-  --font-display: 'Archivo Black', Impact, 'Arial Black', sans-serif;
+  --font-display: 'Thugolatz', 'Syne', 'Archivo Black', Impact, sans-serif;
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
   --font-condensed: 'Barlow Condensed', 'Arial Narrow', sans-serif;

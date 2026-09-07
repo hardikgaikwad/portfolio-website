@@ -16,6 +16,7 @@ export default function AdminProfileManager() {
   const [focusInput, setFocusInput] = useState('');
   const [doingInput, setDoingInput] = useState('');
   const [resumeFile, setResumeFile] = useState<File | null>(null);
+  const [resumeTrack, setResumeTrack] = useState<'general' | 'security' | 'software'>('security');
   const [feedback, setFeedback] = useState<string | null>(null);
 
   const loadProfile = async () => {
@@ -68,8 +69,8 @@ export default function AdminProfileManager() {
     if (!resumeFile) return;
 
     try {
-      await adminUploadResume(resumeFile);
-      setFeedback('Resume document uploaded and linked.');
+      await adminUploadResume(resumeFile, resumeTrack);
+      setFeedback(`${resumeTrack.toUpperCase()} resume document uploaded and linked.`);
       loadProfile();
       setResumeFile(null);
     } catch {
@@ -192,30 +193,55 @@ export default function AdminProfileManager() {
 
         {/* Resume Box */}
         <div className="admin-resume-box">
-          <h4 className="admin-resume-box__title">RESUME / CV DOCUMENT</h4>
-          <p className="admin-resume-box__text">
-            {profile.resume_url ? (
-              <>Current document linked: <a href={profile.resume_url} target="_blank" rel="noopener noreferrer">View Current CV ↗</a></>
-            ) : (
-              'No resume document currently uploaded.'
-            )}
-          </p>
+          <h4 className="admin-resume-box__title">DUAL-TRACK CV DOCUMENTS</h4>
+          <div className="admin-resume-status" style={{ marginBottom: '16px', fontSize: '0.85rem' }}>
+            <div style={{ marginBottom: '6px' }}>
+              <strong>1. Cybersecurity CV:</strong>{' '}
+              {profile.resume_security_url ? (
+                <a href={profile.resume_security_url} target="_blank" rel="noopener noreferrer">View CV ↗</a>
+              ) : (
+                <span style={{ color: '#888' }}>Not uploaded</span>
+              )}
+            </div>
+            <div>
+              <strong>2. Software Dev CV:</strong>{' '}
+              {profile.resume_software_url ? (
+                <a href={profile.resume_software_url} target="_blank" rel="noopener noreferrer">View CV ↗</a>
+              ) : (
+                <span style={{ color: '#888' }}>Not uploaded</span>
+              )}
+            </div>
+          </div>
 
           <form onSubmit={handleUploadResume} className="admin-upload-form">
             <div className="admin-form-field">
-              <label>SELECT NEW CV (PDF, DOC, DOCX)</label>
+              <label>SELECT RESUME TRACK</label>
+              <select
+                value={resumeTrack}
+                onChange={(e) => setResumeTrack(e.target.value as any)}
+                style={{ padding: '8px', marginBottom: '8px' }}
+              >
+                <option value="security">Cybersecurity Resume [eJPT Track]</option>
+                <option value="software">Software Engineering Resume [Dev Track]</option>
+                <option value="general">General Portfolio Resume</option>
+              </select>
+            </div>
+
+            <div className="admin-form-field">
+              <label>SELECT CV FILE (PDF, DOC, DOCX)</label>
               <input
                 type="file"
                 accept=".pdf,.doc,.docx"
                 onChange={(e) => setResumeFile(e.target.files?.[0] || null)}
               />
             </div>
+
             <button
               type="submit"
               disabled={!resumeFile}
               className="admin-btn admin-btn--secondary"
             >
-              UPLOAD RESUME 🡭
+              UPLOAD SELECTED CV 🡭
             </button>
           </form>
         </div>

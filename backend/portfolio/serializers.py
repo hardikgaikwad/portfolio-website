@@ -11,13 +11,17 @@ from .models import Profile, Project, SkillCategory, Skill, SocialLink, SiteSett
 
 class ProfileSerializer(serializers.ModelSerializer):
     resume_url = serializers.SerializerMethodField()
+    resume_security_url = serializers.SerializerMethodField()
+    resume_software_url = serializers.SerializerMethodField()
 
     class Meta:
         model = Profile
         fields = [
             'id', 'name', 'title', 'subtitle', 'bio', 'email',
             'location', 'focus_areas', 'currently_doing',
-            'resume_url', 'updated_at'
+            'education', 'certifications', 'volunteering',
+            'resume_url', 'resume_security_url', 'resume_software_url',
+            'updated_at'
         ]
 
     def get_resume_url(self, obj):
@@ -28,17 +32,38 @@ class ProfileSerializer(serializers.ModelSerializer):
             return obj.resume_file.url
         return None
 
+    def get_resume_security_url(self, obj):
+        if obj.resume_security:
+            request = self.context.get('request')
+            if request:
+                return request.build_absolute_uri(obj.resume_security.url)
+            return obj.resume_security.url
+        return None
+
+    def get_resume_software_url(self, obj):
+        if obj.resume_software:
+            request = self.context.get('request')
+            if request:
+                return request.build_absolute_uri(obj.resume_software.url)
+            return obj.resume_software.url
+        return None
+
 
 class ProfileAdminSerializer(serializers.ModelSerializer):
-    """Admin serializer that includes the file field for uploads."""
+    """Admin serializer that includes file fields for uploads."""
     resume_url = serializers.SerializerMethodField(read_only=True)
+    resume_security_url = serializers.SerializerMethodField(read_only=True)
+    resume_software_url = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Profile
         fields = [
             'id', 'name', 'title', 'subtitle', 'bio', 'email',
             'location', 'focus_areas', 'currently_doing',
-            'resume_file', 'resume_url', 'updated_at'
+            'education', 'certifications', 'volunteering',
+            'resume_file', 'resume_security', 'resume_software',
+            'resume_url', 'resume_security_url', 'resume_software_url',
+            'updated_at'
         ]
 
     def get_resume_url(self, obj):
@@ -47,6 +72,22 @@ class ProfileAdminSerializer(serializers.ModelSerializer):
             if request:
                 return request.build_absolute_uri(obj.resume_file.url)
             return obj.resume_file.url
+        return None
+
+    def get_resume_security_url(self, obj):
+        if obj.resume_security:
+            request = self.context.get('request')
+            if request:
+                return request.build_absolute_uri(obj.resume_security.url)
+            return obj.resume_security.url
+        return None
+
+    def get_resume_software_url(self, obj):
+        if obj.resume_software:
+            request = self.context.get('request')
+            if request:
+                return request.build_absolute_uri(obj.resume_software.url)
+            return obj.resume_software.url
         return None
 
 
@@ -58,7 +99,8 @@ class ProjectListSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'title', 'slug', 'short_description', 'image',
             'technologies', 'github_url', 'live_url', 'featured',
-            'display_order', 'status', 'security_category', 'created_at'
+            'display_order', 'status', 'project_type', 'security_category',
+            'repo_name', 'github_stars', 'is_github_synced', 'created_at'
         ]
 
 
@@ -71,7 +113,8 @@ class ProjectDetailSerializer(serializers.ModelSerializer):
             'id', 'title', 'slug', 'short_description', 'long_description',
             'image', 'technologies', 'github_url', 'live_url',
             'documentation_url', 'featured', 'display_order', 'status',
-            'security_category', 'role', 'highlights', 'challenges',
+            'project_type', 'security_category', 'repo_name', 'github_stars',
+            'is_github_synced', 'role', 'highlights', 'challenges',
             'architecture', 'created_at', 'updated_at'
         ]
 
@@ -120,7 +163,6 @@ class SkillCategoryAdminSerializer(serializers.ModelSerializer):
         instance.save()
 
         if skills_data is not None:
-            # Replace all skills for this category
             instance.skills.all().delete()
             for skill_data in skills_data:
                 Skill.objects.create(category=instance, **skill_data)
@@ -133,10 +175,16 @@ class SocialLinkSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SocialLink
-        fields = ['id', 'platform', 'platform_display', 'label', 'url', 'icon', 'display_order']
+        fields = [
+            'id', 'platform', 'platform_display', 'label',
+            'url', 'icon', 'display_order'
+        ]
 
 
 class SiteSettingsSerializer(serializers.ModelSerializer):
     class Meta:
         model = SiteSettings
-        fields = ['id', 'site_title', 'terminal_welcome', 'meta_description', 'footer_text', 'updated_at']
+        fields = [
+            'id', 'site_title', 'terminal_welcome',
+            'meta_description', 'footer_text', 'updated_at'
+        ]

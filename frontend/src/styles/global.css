@@ -30,37 +30,18 @@ body {
   overflow-x: hidden;
 }
 
-/* ── Graph Paper Background ───────────────────────────────── */
-body::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: url('/grid-paper-bg.webp');
-  background-size: cover;
-  background-position: center;
-  background-repeat: repeat;
-  opacity: 0.7;
-  z-index: var(--z-background);
-  pointer-events: none;
+/* ── Procedural Canvas Host ─────────────────────────────────── */
+body {
+  background-color: var(--color-paper, #EFE9D7);
 }
 
-/* Fallback CSS grid if image fails */
-body::after {
-  content: '';
+.procedural-grid-canvas {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background-image:
-    linear-gradient(var(--color-paper-grid) 1px, transparent 1px),
-    linear-gradient(90deg, var(--color-paper-grid) 1px, transparent 1px);
-  background-size: 24px 24px;
-  opacity: 0.3;
-  z-index: var(--z-background);
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
   pointer-events: none;
 }
 
@@ -168,3 +149,86 @@ ul, ol {
     scroll-behavior: auto !important;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   SUBTLE ASYMMETRIC PIXELATED CORNERS
+   Digital / cybersecurity micro-intervention on vintage cards
+   ═══════════════════════════════════════════════════════════ */
+
+/* Corner Variation A: Top-left stepped pixel cutout */
+.pixel-corner-a,
+.project-card:nth-child(5n + 1),
+.skill-category-card:nth-child(4n + 1) {
+  clip-path: polygon(
+    0 10px, 5px 10px, 5px 5px, 10px 5px, 10px 0,
+    100% 0, 100% 100%, 0 100%
+  );
+}
+
+/* Corner Variation B: Top-right stepped pixel cutout */
+.pixel-corner-b,
+.project-card:nth-child(5n + 2),
+.skill-category-card:nth-child(4n + 2),
+.contact-info-panel {
+  clip-path: polygon(
+    0 0,
+    calc(100% - 10px) 0, calc(100% - 10px) 5px, calc(100% - 5px) 5px, calc(100% - 5px) 10px, 100% 10px,
+    100% 100%, 0 100%
+  );
+}
+
+/* Corner Variation C: Bottom-left stepped pixel cutout */
+.pixel-corner-c,
+.project-card:nth-child(5n + 3),
+.skill-category-card:nth-child(4n + 3),
+.intel-panel:nth-child(even) {
+  clip-path: polygon(
+    0 0, 100% 0, 100% 100%,
+    10px 100%, 10px calc(100% - 5px), 5px calc(100% - 5px), 5px calc(100% - 10px), 0 calc(100% - 10px)
+  );
+}
+
+/* Corner Variation D: Dual asymmetric corners (top-left + bottom-right steps) */
+.pixel-corner-d,
+.project-card:nth-child(5n + 4),
+.skill-category-card:nth-child(4n + 4),
+.dossier-card {
+  clip-path: polygon(
+    0 8px, 4px 8px, 4px 4px, 8px 4px, 8px 0,
+    100% 0,
+    100% calc(100% - 8px), calc(100% - 4px) calc(100% - 8px), calc(100% - 4px) calc(100% - 4px), calc(100% - 8px) calc(100% - 4px), calc(100% - 8px) 100%,
+    0 100%
+  );
+}
+
+/* Corner Variation E: Subtle pixel notch on top-right */
+.pixel-corner-e,
+.project-card:nth-child(5n + 5),
+.intel-panel:nth-child(odd),
+.contact-form-panel {
+  clip-path: polygon(
+    0 0,
+    calc(100% - 8px) 0, calc(100% - 8px) 4px, calc(100% - 4px) 4px, calc(100% - 4px) 8px, 100% 8px,
+    100% 100%, 0 100%
+  );
+}
+
+/* Terminal & Modal subtle pixel notches */
+.terminal {
+  clip-path: polygon(
+    0 8px, 4px 8px, 4px 4px, 8px 4px, 8px 0,
+    100% 0,
+    100% calc(100% - 8px), calc(100% - 4px) calc(100% - 8px), calc(100% - 4px) calc(100% - 4px), calc(100% - 8px) calc(100% - 4px), calc(100% - 8px) 100%,
+    0 100%
+  );
+}
+
+.modal-content {
+  clip-path: polygon(
+    0 10px, 5px 10px, 5px 5px, 10px 5px, 10px 0,
+    100% 0,
+    100% calc(100% - 10px), calc(100% - 5px) calc(100% - 10px), calc(100% - 5px) calc(100% - 5px), calc(100% - 10px) calc(100% - 5px), calc(100% - 10px) 100%,
+    0 100%
+  );
+}
+

@@ -23,6 +23,16 @@ def resume_upload_path(instance, filename):
     return f'resume/resume{ext}'
 
 
+def resume_security_upload_path(instance, filename):
+    ext = os.path.splitext(filename)[1]
+    return f'resume/hardik_gaikwad_cybersecurity{ext}'
+
+
+def resume_software_upload_path(instance, filename):
+    ext = os.path.splitext(filename)[1]
+    return f'resume/hardik_gaikwad_software{ext}'
+
+
 class Profile(models.Model):
     """
     Singleton model for the portfolio owner's profile.
@@ -45,6 +55,20 @@ class Profile(models.Model):
         validators=[FileExtensionValidator(allowed_extensions=['pdf', 'doc', 'docx'])],
         help_text='Upload resume (PDF, DOC, DOCX)'
     )
+    resume_security = models.FileField(
+        upload_to=resume_security_upload_path,
+        blank=True,
+        null=True,
+        validators=[FileExtensionValidator(allowed_extensions=['pdf', 'doc', 'docx'])],
+        help_text='Upload Cybersecurity Resume'
+    )
+    resume_software = models.FileField(
+        upload_to=resume_software_upload_path,
+        blank=True,
+        null=True,
+        validators=[FileExtensionValidator(allowed_extensions=['pdf', 'doc', 'docx'])],
+        help_text='Upload Software Engineering Resume'
+    )
     # Focus areas displayed in the About section
     focus_areas = models.JSONField(
         default=list,
@@ -55,6 +79,21 @@ class Profile(models.Model):
         default=list,
         blank=True,
         help_text='JSON array of current activities, e.g. ["Building", "Learning"]'
+    )
+    education = models.JSONField(
+        default=list,
+        blank=True,
+        help_text='JSON array of education records'
+    )
+    certifications = models.JSONField(
+        default=list,
+        blank=True,
+        help_text='JSON array of certifications'
+    )
+    volunteering = models.JSONField(
+        default=list,
+        blank=True,
+        help_text='JSON array of volunteering activities'
     )
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -103,6 +142,28 @@ class Project(models.Model):
     featured = models.BooleanField(default=False, help_text='Show on homepage')
     display_order = models.IntegerField(default=0, help_text='Lower numbers appear first')
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='completed')
+    
+    PROJECT_TYPE_CHOICES = [
+        ('security', 'Security / Pentesting'),
+        ('software', 'Software Engineering'),
+        ('fullstack', 'Full Stack'),
+        ('research', 'Research & Exploitation'),
+        ('lab', 'Lab / Virtual Environment'),
+        ('other', 'Other'),
+    ]
+    project_type = models.CharField(
+        max_length=50,
+        choices=PROJECT_TYPE_CHOICES,
+        default='security',
+        help_text='Classification track for portfolio filtering'
+    )
+    repo_name = models.CharField(
+        max_length=150,
+        blank=True,
+        help_text='GitHub repository name (e.g. hardikgaikwad/PrivShare)'
+    )
+    github_stars = models.IntegerField(default=0)
+    is_github_synced = models.BooleanField(default=False)
     # Optional detailed fields
     security_category = models.CharField(max_length=100, blank=True)
     role = models.CharField(max_length=200, blank=True)
