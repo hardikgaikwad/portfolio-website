@@ -23,10 +23,15 @@ jobs:
           # Strip trailing slash if present
           CLEAN_URL="${BACKEND_URL%/}"
           echo "Pinging health endpoint at ${CLEAN_URL}/api/health/ ..."
-          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 45 "${CLEAN_URL}/api/health/")
+          RESPONSE_FILE=$(mktemp)
+          HTTP_STATUS=$(curl -s -L -w "%{http_code}" -o "$RESPONSE_FILE" --max-time 60 "${CLEAN_URL}/api/health/")
           echo "HTTP Status: $HTTP_STATUS"
+          echo "Response Body:"
+          cat "$RESPONSE_FILE"
+          echo ""
           if [ "$HTTP_STATUS" -eq 200 ]; then
-            echo "Backend is healthy and Neon database query completed successfully!"
+            echo "SUCCESS: Backend is healthy and database is connected!"
           else
-            echo "Status returned: $HTTP_STATUS"
+            echo "WARNING: Health check returned HTTP $HTTP_STATUS"
+            exit 1
           fi
