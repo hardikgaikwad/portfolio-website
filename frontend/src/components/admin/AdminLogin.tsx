@@ -85,7 +85,7 @@ export default function AdminLogin({ onLogin, loading, error }: Props) {
           </form>
 
           <div className="admin-login-footer">
-            <span>DEFAULT DEV ACCESS: admin / admin123</span>
+            <span>RESTRICTED // AUTHORIZED ACCESS ONLY</span>
             <a href="/" className="admin-login-back-link">← RETURN TO TERMINAL</a>
           </div>
         </div>
