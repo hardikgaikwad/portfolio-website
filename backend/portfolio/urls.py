@@ -19,6 +19,7 @@ urlpatterns = [
     path('project-filters/', views.ProjectCategoryListView.as_view(), name='project-filter-list'),
     path('resumes/<str:track>/', views.ResumeDownloadView.as_view(), name='resume-download'),
     path('site-settings/', views.SiteSettingsView.as_view(), name='site-settings'),
+    path('health/', views.HealthCheckView.as_view(), name='health-check'),
 
     # ── Admin API ───────────────────────────────────────────
     path('admin/profile/', admin_views.AdminProfileView.as_view(), name='admin-profile'),

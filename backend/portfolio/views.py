@@ -6,6 +6,7 @@ These endpoints are read-only and accessible without authentication.
 
 from django.shortcuts import redirect
 from django.http import Http404
+from django.db import connection
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -167,3 +168,27 @@ class CertificationListView(generics.ListAPIView):
     permission_classes = [AllowAny]
     serializer_class = CertificationSerializer
     queryset = Certification.objects.all()
+
+
+class HealthCheckView(APIView):
+    """
+    GET /api/health/
+    Health check endpoint that tests application responsiveness and database connectivity.
+    Ideal for Koyeb / UptimeRobot keep-alive pings.
+    """
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT 1;")
+            return Response(
+                {"status": "healthy", "database": "connected"},
+                status=status.HTTP_200_OK
+            )
+        except Exception as exc:
+            return Response(
+                {"status": "unhealthy", "database": str(exc)},
+                status=status.HTTP_503_SERVICE_UNAVAILABLE
+            )
+
