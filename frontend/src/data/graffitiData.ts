@@ -1,0 +1,540 @@
+/* ═══════════════════════════════════════════════════════════
+   graffitiData.ts — Hand-Sprayed Graffiti & Doodles Catalog
+   Physical street/notebook annotations across the graph paper canvas
+   ═══════════════════════════════════════════════════════════ */
+
+export interface OversprayDot {
+  dx: number; // offset in px from item center
+  dy: number;
+  r: number;  // radius
+  opacity: number;
+}
+
+export type DoodleType =
+  | 'eye'
+  | 'explosion'
+  | 'lightning'
+  | 'crosshair'
+  | 'lock'
+  | 'bug'
+  | 'arrow-up-right'
+  | 'arrow-down-left'
+  | 'terminal-prompt'
+  | 'network-nodes'
+  | 'wifi'
+  | 'broken-chain'
+  | 'skull-doodle'
+  | 'brackets'
+  | 'target'
+  | 'sparkle';
+
+export interface GraffitiItem {
+  id: string;
+  kind: 'word' | 'doodle' | 'combo';
+  text?: string;
+  subtext?: string;
+  doodle?: DoodleType;
+  side: 'left' | 'right';
+  topPercent: number; // Vertical position as % of document height
+  marginOffsetPx: number; // Distance from left or right edge in px (responsive)
+  rotationDeg: number; // Subtle tilt (-9 to +8)
+  scale: number; // 0.75 to 1.25
+  color: 'navy' | 'orange' | 'golden' | 'charcoal';
+  opacity: number; // 0.45 to 0.9
+  sprayEffect: boolean; // apply rough displacement filter
+  oversprayDots?: OversprayDot[];
+  hideOnMobile?: boolean;
+}
+
+export const GRAFFITI_ITEMS: GraffitiItem[] = [
+  // ── HERO ZONE (0% - 15%) ────────────────────────────────────
+  {
+    id: 'hero-recon',
+    kind: 'word',
+    text: 'RECON',
+    subtext: '// 01',
+    side: 'left',
+    topPercent: 3.2,
+    marginOffsetPx: 28,
+    rotationDeg: -5,
+    scale: 1.15,
+    color: 'navy',
+    opacity: 0.85,
+    sprayEffect: true,
+    oversprayDots: [
+      { dx: -35, dy: -12, r: 1.5, opacity: 0.4 },
+      { dx: -28, dy: 18, r: 2.0, opacity: 0.35 },
+      { dx: 45, dy: -14, r: 1.2, opacity: 0.5 },
+      { dx: 52, dy: 10, r: 1.8, opacity: 0.45 },
+    ],
+  },
+  {
+    id: 'hero-eye',
+    kind: 'doodle',
+    doodle: 'eye',
+    side: 'left',
+    topPercent: 6.8,
+    marginOffsetPx: 45,
+    rotationDeg: 4,
+    scale: 1.0,
+    color: 'orange',
+    opacity: 0.8,
+    sprayEffect: true,
+    oversprayDots: [
+      { dx: 22, dy: -18, r: 1.5, opacity: 0.4 },
+      { dx: -20, dy: 15, r: 1.8, opacity: 0.5 },
+    ],
+  },
+  {
+    id: 'hero-explosion',
+    kind: 'doodle',
+    doodle: 'explosion',
+    side: 'right',
+    topPercent: 2.8,
+    marginOffsetPx: 36,
+    rotationDeg: 7,
+    scale: 1.1,
+    color: 'golden',
+    opacity: 0.82,
+    sprayEffect: true,
+    oversprayDots: [
+      { dx: -25, dy: -20, r: 2.0, opacity: 0.5 },
+      { dx: 30, dy: 15, r: 1.5, opacity: 0.4 },
+      { dx: -15, dy: 24, r: 1.2, opacity: 0.4 },
+    ],
+  },
+  {
+    id: 'hero-explore',
+    kind: 'word',
+    text: 'EXPLORE',
+    side: 'right',
+    topPercent: 7.4,
+    marginOffsetPx: 42,
+    rotationDeg: -3,
+    scale: 0.95,
+    color: 'navy',
+    opacity: 0.75,
+    sprayEffect: true,
+  },
+
+  // ── TERMINAL ZONE (15% - 30%) ───────────────────────────────
+  {
+    id: 'term-prompt-doodle',
+    kind: 'combo',
+    text: '>_',
+    subtext: 'ROOT_SHELL',
+    doodle: 'terminal-prompt',
+    side: 'left',
+    topPercent: 16.5,
+    marginOffsetPx: 32,
+    rotationDeg: -4,
+    scale: 1.05,
+    color: 'orange',
+    opacity: 0.85,
+    sprayEffect: true,
+    oversprayDots: [
+      { dx: -25, dy: 12, r: 1.8, opacity: 0.4 },
+      { dx: 30, dy: -8, r: 1.2, opacity: 0.5 },
+    ],
+  },
+  {
+    id: 'term-lightning',
+    kind: 'doodle',
+    doodle: 'lightning',
+    side: 'left',
+    topPercent: 22.0,
+    marginOffsetPx: 50,
+    rotationDeg: 8,
+    scale: 1.1,
+    color: 'golden',
+    opacity: 0.88,
+    sprayEffect: true,
+  },
+  {
+    id: 'term-tcp',
+    kind: 'word',
+    text: 'TCP/IP:443',
+    side: 'left',
+    topPercent: 27.2,
+    marginOffsetPx: 25,
+    rotationDeg: 2,
+    scale: 0.85,
+    color: 'charcoal',
+    opacity: 0.65,
+    sprayEffect: false,
+    hideOnMobile: true,
+  },
+  {
+    id: 'term-0day',
+    kind: 'word',
+    text: '0DAY',
+    subtext: 'EXP-LOC',
+    side: 'right',
+    topPercent: 15.8,
+    marginOffsetPx: 38,
+    rotationDeg: 6,
+    scale: 1.1,
+    color: 'orange',
+    opacity: 0.8,
+    sprayEffect: true,
+    oversprayDots: [
+      { dx: 28, dy: -14, r: 1.6, opacity: 0.45 },
+      { dx: -30, dy: 16, r: 2.0, opacity: 0.4 },
+    ],
+  },
+  {
+    id: 'term-crosshair',
+    kind: 'doodle',
+    doodle: 'crosshair',
+    side: 'right',
+    topPercent: 21.4,
+    marginOffsetPx: 48,
+    rotationDeg: -5,
+    scale: 0.95,
+    color: 'navy',
+    opacity: 0.78,
+    sprayEffect: true,
+  },
+  {
+    id: 'term-nodes',
+    kind: 'doodle',
+    doodle: 'network-nodes',
+    side: 'right',
+    topPercent: 28.0,
+    marginOffsetPx: 30,
+    rotationDeg: 3,
+    scale: 1.0,
+    color: 'navy',
+    opacity: 0.75,
+    sprayEffect: false,
+    hideOnMobile: true,
+  },
+
+  // ── ABOUT & DOSSIER ZONE (30% - 50%) ────────────────────────
+  {
+    id: 'about-build-it',
+    kind: 'word',
+    text: 'BUILD IT',
+    subtext: '// BACKEND',
+    side: 'left',
+    topPercent: 33.5,
+    marginOffsetPx: 30,
+    rotationDeg: -4,
+    scale: 1.2,
+    color: 'navy',
+    opacity: 0.9,
+    sprayEffect: true,
+    oversprayDots: [
+      { dx: -40, dy: -10, r: 1.8, opacity: 0.45 },
+      { dx: 45, dy: 18, r: 2.2, opacity: 0.4 },
+      { dx: -20, dy: 22, r: 1.4, opacity: 0.5 },
+    ],
+  },
+  {
+    id: 'about-brackets',
+    kind: 'doodle',
+    doodle: 'brackets',
+    side: 'left',
+    topPercent: 39.0,
+    marginOffsetPx: 45,
+    rotationDeg: 5,
+    scale: 1.05,
+    color: 'golden',
+    opacity: 0.8,
+    sprayEffect: true,
+  },
+  {
+    id: 'about-osint',
+    kind: 'word',
+    text: 'OSINT',
+    side: 'left',
+    topPercent: 44.8,
+    marginOffsetPx: 25,
+    rotationDeg: 2,
+    scale: 0.9,
+    color: 'charcoal',
+    opacity: 0.65,
+    sprayEffect: false,
+    hideOnMobile: true,
+  },
+  {
+    id: 'about-break-it',
+    kind: 'word',
+    text: 'BREAK IT',
+    subtext: '// OFFSEC',
+    side: 'right',
+    topPercent: 34.2,
+    marginOffsetPx: 35,
+    rotationDeg: 5,
+    scale: 1.2,
+    color: 'orange',
+    opacity: 0.88,
+    sprayEffect: true,
+    oversprayDots: [
+      { dx: 38, dy: -16, r: 2.0, opacity: 0.5 },
+      { dx: -35, dy: 14, r: 1.6, opacity: 0.4 },
+    ],
+  },
+  {
+    id: 'about-skull',
+    kind: 'doodle',
+    doodle: 'skull-doodle',
+    side: 'right',
+    topPercent: 40.5,
+    marginOffsetPx: 52,
+    rotationDeg: -6,
+    scale: 1.0,
+    color: 'navy',
+    opacity: 0.8,
+    sprayEffect: true,
+  },
+  {
+    id: 'about-127',
+    kind: 'word',
+    text: '127.0.0.1',
+    side: 'right',
+    topPercent: 46.2,
+    marginOffsetPx: 28,
+    rotationDeg: -2,
+    scale: 0.85,
+    color: 'charcoal',
+    opacity: 0.7,
+    sprayEffect: false,
+    hideOnMobile: true,
+  },
+
+  // ── SKILLS / PROFICIENCIES ZONE (50% - 68%) ─────────────────
+  {
+    id: 'skills-root',
+    kind: 'word',
+    text: 'ROOT',
+    subtext: '#UID=0',
+    side: 'left',
+    topPercent: 52.0,
+    marginOffsetPx: 35,
+    rotationDeg: -6,
+    scale: 1.15,
+    color: 'orange',
+    opacity: 0.85,
+    sprayEffect: true,
+    oversprayDots: [
+      { dx: -30, dy: -14, r: 1.6, opacity: 0.4 },
+      { dx: 32, dy: 16, r: 2.0, opacity: 0.45 },
+    ],
+  },
+  {
+    id: 'skills-wifi',
+    kind: 'doodle',
+    doodle: 'wifi',
+    side: 'left',
+    topPercent: 58.5,
+    marginOffsetPx: 42,
+    rotationDeg: 4,
+    scale: 1.0,
+    color: 'navy',
+    opacity: 0.78,
+    sprayEffect: true,
+  },
+  {
+    id: 'skills-sparkle',
+    kind: 'doodle',
+    doodle: 'sparkle',
+    side: 'left',
+    topPercent: 63.8,
+    marginOffsetPx: 55,
+    rotationDeg: -8,
+    scale: 0.9,
+    color: 'golden',
+    opacity: 0.82,
+    sprayEffect: true,
+  },
+  {
+    id: 'skills-pwned',
+    kind: 'word',
+    text: 'PWNED!',
+    side: 'right',
+    topPercent: 53.4,
+    marginOffsetPx: 36,
+    rotationDeg: 4,
+    scale: 1.1,
+    color: 'navy',
+    opacity: 0.85,
+    sprayEffect: true,
+    oversprayDots: [
+      { dx: 28, dy: -12, r: 1.8, opacity: 0.4 },
+      { dx: -24, dy: 18, r: 1.4, opacity: 0.5 },
+    ],
+  },
+  {
+    id: 'skills-bug',
+    kind: 'doodle',
+    doodle: 'bug',
+    side: 'right',
+    topPercent: 59.2,
+    marginOffsetPx: 48,
+    rotationDeg: -7,
+    scale: 1.05,
+    color: 'orange',
+    opacity: 0.82,
+    sprayEffect: true,
+  },
+  {
+    id: 'skills-auth',
+    kind: 'word',
+    text: 'AUTH:200',
+    side: 'right',
+    topPercent: 65.0,
+    marginOffsetPx: 25,
+    rotationDeg: 2,
+    scale: 0.85,
+    color: 'charcoal',
+    opacity: 0.65,
+    sprayEffect: false,
+    hideOnMobile: true,
+  },
+
+  // ── PROJECTS ZONE (68% - 88%) ───────────────────────────────
+  // Near XSScan
+  {
+    id: 'proj-xss',
+    kind: 'combo',
+    text: 'XSS',
+    doodle: 'arrow-up-right',
+    side: 'left',
+    topPercent: 70.8,
+    marginOffsetPx: 32,
+    rotationDeg: -7,
+    scale: 1.2,
+    color: 'orange',
+    opacity: 0.9,
+    sprayEffect: true,
+    oversprayDots: [
+      { dx: -28, dy: -14, r: 2.0, opacity: 0.5 },
+      { dx: 36, dy: 12, r: 1.6, opacity: 0.45 },
+      { dx: 18, dy: 24, r: 1.2, opacity: 0.4 },
+    ],
+  },
+  // Near PrivShare
+  {
+    id: 'proj-secure-lock',
+    kind: 'combo',
+    text: 'SECURE',
+    doodle: 'lock',
+    side: 'right',
+    topPercent: 71.5,
+    marginOffsetPx: 34,
+    rotationDeg: 4,
+    scale: 1.15,
+    color: 'navy',
+    opacity: 0.88,
+    sprayEffect: true,
+    oversprayDots: [
+      { dx: 30, dy: -15, r: 1.8, opacity: 0.4 },
+      { dx: -26, dy: 16, r: 2.2, opacity: 0.45 },
+    ],
+  },
+  // Near Home Cyber Lab
+  {
+    id: 'proj-lab-chain',
+    kind: 'combo',
+    text: 'LAB_SIM',
+    doodle: 'broken-chain',
+    side: 'left',
+    topPercent: 78.4,
+    marginOffsetPx: 40,
+    rotationDeg: 3,
+    scale: 1.05,
+    color: 'golden',
+    opacity: 0.85,
+    sprayEffect: true,
+  },
+  {
+    id: 'proj-ship',
+    kind: 'word',
+    text: 'SHIP IT',
+    subtext: '// PROD',
+    side: 'right',
+    topPercent: 79.0,
+    marginOffsetPx: 42,
+    rotationDeg: -5,
+    scale: 1.05,
+    color: 'orange',
+    opacity: 0.82,
+    sprayEffect: true,
+    oversprayDots: [
+      { dx: 24, dy: -10, r: 1.5, opacity: 0.4 },
+      { dx: -20, dy: 14, r: 1.8, opacity: 0.45 },
+    ],
+  },
+  {
+    id: 'proj-scan',
+    kind: 'word',
+    text: 'SCAN // RECON',
+    side: 'left',
+    topPercent: 84.6,
+    marginOffsetPx: 26,
+    rotationDeg: -3,
+    scale: 0.9,
+    color: 'navy',
+    opacity: 0.72,
+    sprayEffect: false,
+    hideOnMobile: true,
+  },
+
+  // ── CONTACT & FOOTER ZONE (88% - 100%) ──────────────────────
+  {
+    id: 'contact-connect',
+    kind: 'word',
+    text: 'COMM_LINK',
+    subtext: '// ACTIVE',
+    side: 'left',
+    topPercent: 91.2,
+    marginOffsetPx: 35,
+    rotationDeg: -4,
+    scale: 1.1,
+    color: 'navy',
+    opacity: 0.85,
+    sprayEffect: true,
+  },
+  {
+    id: 'contact-target',
+    kind: 'doodle',
+    doodle: 'target',
+    side: 'left',
+    topPercent: 96.0,
+    marginOffsetPx: 48,
+    rotationDeg: 6,
+    scale: 1.0,
+    color: 'orange',
+    opacity: 0.8,
+    sprayEffect: true,
+  },
+  {
+    id: 'contact-eof',
+    kind: 'word',
+    text: ':(){ :|:& };:',
+    subtext: '// FORK BOMB [DECORATIVE]',
+    side: 'right',
+    topPercent: 92.5,
+    marginOffsetPx: 30,
+    rotationDeg: 3,
+    scale: 0.82,
+    color: 'charcoal',
+    opacity: 0.6,
+    sprayEffect: false,
+    hideOnMobile: true,
+  },
+  {
+    id: 'contact-sparkle-end',
+    kind: 'doodle',
+    doodle: 'sparkle',
+    side: 'right',
+    topPercent: 97.2,
+    marginOffsetPx: 44,
+    rotationDeg: -5,
+    scale: 1.1,
+    color: 'golden',
+    opacity: 0.85,
+    sprayEffect: true,
+  },
+];

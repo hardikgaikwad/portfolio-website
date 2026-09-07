@@ -9,6 +9,7 @@ import { useAuth } from './hooks/useAuth';
 // Layout & Sections
 import Navigation from './components/layout/Navigation';
 import ProceduralGridCanvas from './components/layout/ProceduralGridCanvas';
+import GraffitiLayer from './components/layout/GraffitiLayer';
 import HeroSection from './components/hero/HeroSection';
 import Terminal from './components/terminal/Terminal';
 import ProjectsSection from './components/projects/ProjectsSection';
@@ -27,6 +28,7 @@ function MainPortfolio() {
   return (
     <div className="portfolio-app">
       <ProceduralGridCanvas />
+      <GraffitiLayer />
       <Navigation />
 
       <main>

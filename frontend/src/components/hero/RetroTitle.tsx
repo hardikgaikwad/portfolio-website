@@ -99,6 +99,54 @@ export default function RetroTitle({ text, className = '' }: Props) {
                 {line2}
               </text>
             </g>
+
+            {/* Broken Pixel Fragments — Asymmetric, subtle digital crumbling */}
+            <g className="retro-title__pixels" shapeRendering="crispEdges">
+              {/* Top-Left Cluster (above H and A) */}
+              <rect x="184" y="16" width="7" height="7" fill="#D56A25" opacity="0.9" />
+              <rect x="195" y="12" width="5" height="5" fill="#F7C948" opacity="0.8" />
+              <rect x="176" y="26" width="6" height="6" fill="#183F68" opacity="0.85" />
+              <rect x="238" y="18" width="6" height="6" fill="#183F68" opacity="0.75" />
+              <rect x="248" y="24" width="4" height="4" fill="#8C7D68" opacity="0.7" />
+
+              {/* Top-Center subtle crumbs (above D) */}
+              <rect x="420" y="20" width="5" height="5" fill="#F7C948" opacity="0.8" />
+              <rect x="428" y="15" width="6" height="6" fill="#D56A25" opacity="0.85" />
+
+              {/* Top-Right Stepped Breakaway (above K) */}
+              <rect x="672" y="22" width="8" height="8" fill="#183F68" opacity="0.9" />
+              <rect x="684" y="16" width="6" height="6" fill="#D56A25" opacity="0.85" />
+              <rect x="694" y="26" width="5" height="5" fill="#F7C948" opacity="0.8" />
+
+              {/* Inter-line Drift (between HARDIK and GAIKWAD) */}
+              <rect x="282" y="134" width="6" height="6" fill="#183F68" opacity="0.7" />
+              <rect x="292" y="138" width="4" height="4" fill="#D56A25" opacity="0.75" />
+              <rect x="638" y="132" width="7" height="7" fill="#F7C948" opacity="0.8" />
+              <rect x="648" y="136" width="5" height="5" fill="#183F68" opacity="0.7" />
+
+              {/* Far-Left Crumbs (beside G) */}
+              <rect x="96" y="188" width="6" height="6" fill="#183F68" opacity="0.85" />
+              <rect x="105" y="182" width="5" height="5" fill="#D56A25" opacity="0.8" />
+              <rect x="92" y="200" width="4" height="4" fill="#8C7D68" opacity="0.65" />
+
+              {/* Bottom-Left Falling Pixels (below G and A) */}
+              <rect x="132" y="246" width="8" height="8" fill="#183F68" opacity="0.9" />
+              <rect x="144" y="252" width="6" height="6" fill="#D56A25" opacity="0.85" />
+              <rect x="154" y="248" width="5" height="5" fill="#F7C948" opacity="0.75" />
+              <rect x="188" y="250" width="7" height="7" fill="#183F68" opacity="0.8" />
+              <rect x="198" y="256" width="4" height="4" fill="#8C7D68" opacity="0.7" />
+
+              {/* Bottom-Center scattered bits (below K and W) */}
+              <rect x="435" y="248" width="6" height="6" fill="#D56A25" opacity="0.85" />
+              <rect x="444" y="254" width="5" height="5" fill="#F7C948" opacity="0.75" />
+              <rect x="520" y="247" width="5" height="5" fill="#183F68" opacity="0.7" />
+
+              {/* Far-Right Detached Pixels (beside D) */}
+              <rect x="748" y="186" width="7" height="7" fill="#F7C948" opacity="0.85" />
+              <rect x="758" y="192" width="5" height="5" fill="#183F68" opacity="0.8" />
+              <rect x="752" y="204" width="6" height="6" fill="#D56A25" opacity="0.75" />
+              <rect x="765" y="198" width="4" height="4" fill="#8C7D68" opacity="0.6" />
+            </g>
           </>
         ) : (
           <>

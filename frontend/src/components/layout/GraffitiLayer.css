@@ -1,0 +1,139 @@
+/* ═══════════════════════════════════════════════════════════
+   GraffitiLayer.css — Hand-Sprayed Cybersecurity Graffiti
+   Embedded in the continuous graph-paper page layer
+   ═══════════════════════════════════════════════════════════ */
+
+.graffiti-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+/* Base graffiti item */
+.graffiti-item {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  user-select: none;
+  filter: drop-shadow(1px 1px 0px rgba(239, 233, 215, 0.6));
+  transition: opacity 0.2s ease;
+}
+
+/* Position positioning */
+.graffiti-item--left {
+  left: clamp(14px, 3vw, 55px);
+}
+
+.graffiti-item--right {
+  right: clamp(14px, 3vw, 55px);
+}
+
+/* Palette variations */
+.graffiti--navy {
+  color: #183F68;
+  fill: #183F68;
+}
+.graffiti--navy svg {
+  stroke: #183F68;
+}
+
+.graffiti--orange {
+  color: #D56A25;
+  fill: #D56A25;
+}
+.graffiti--orange svg {
+  stroke: #D56A25;
+}
+
+.graffiti--golden {
+  color: #D5A62D;
+  fill: #D5A62D;
+}
+.graffiti--golden svg {
+  stroke: #D5A62D;
+}
+
+.graffiti--charcoal {
+  color: #2E3E4E;
+  fill: #2E3E4E;
+}
+.graffiti--charcoal svg {
+  stroke: #2E3E4E;
+}
+
+/* Spray effect filter */
+.graffiti--spray {
+  filter: url(#sprayDistort);
+}
+
+/* Word typography */
+.graffiti-word {
+  font-family: var(--font-display, sans-serif);
+  font-size: 1.45rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1.05;
+  white-space: nowrap;
+  text-shadow: 1px 1px 0px rgba(14, 42, 71, 0.15);
+}
+
+.graffiti-subtext {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  margin-top: 3px;
+  opacity: 0.85;
+  white-space: nowrap;
+}
+
+/* SVG Doodles */
+.graffiti-doodle-svg {
+  display: block;
+  overflow: visible;
+}
+
+/* Overspray Splatter Particles */
+.graffiti-overspray-particle {
+  pointer-events: none;
+}
+
+/* Responsive Handling */
+@media (max-width: 1024px) {
+  .graffiti-item {
+    transform: scale(0.85);
+  }
+  .graffiti-item--left {
+    left: clamp(8px, 2vw, 24px);
+  }
+  .graffiti-item--right {
+    right: clamp(8px, 2vw, 24px);
+  }
+}
+
+@media (max-width: 768px) {
+  .graffiti-item--mobile-hide {
+    display: none !important;
+  }
+  .graffiti-item {
+    transform: scale(0.7);
+  }
+  .graffiti-item--left {
+    left: 6px;
+  }
+  .graffiti-item--right {
+    right: 6px;
+  }
+  .graffiti-word {
+    font-size: 1.15rem;
+  }
+}

@@ -30,9 +30,21 @@ body {
   overflow-x: hidden;
 }
 
-/* ── Procedural Canvas Host ─────────────────────────────────── */
+/* ── Procedural Canvas Host & Document Layers ──────────────── */
 body {
   background-color: var(--color-paper, #EFE9D7);
+}
+
+.portfolio-app {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+main {
+  position: relative;
+  z-index: 1;
 }
 
 .procedural-grid-canvas {
