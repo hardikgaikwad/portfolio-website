@@ -1,0 +1,760 @@
+[
+{
+  "model": "portfolio.profile",
+  "pk": 1,
+  "fields": {
+    "name": "Hardik Gaikwad",
+    "title": "Cybersecurity Engineer & Software Developer",
+    "subtitle": "BUILD IT. BREAK IT. SECURE IT. — OFFENSIVE SECURITY & BACKEND ENGINEERING",
+    "bio": "Cybersecurity researcher and software engineer with a deep passion for offensive security, web application penetration testing, and architecting resilient backend systems. eJPT-certified with top 4% global ranking on TryHackMe, actively bridging the gap between vulnerability discovery and secure software development.",
+    "email": "hardikgaikwad04@gmail.com",
+    "location": "Jabalpur, India",
+    "resume_file": "",
+    "resume_security": "",
+    "resume_security_url": "/resumes/cybersecurity.pdf",
+    "resume_software": "",
+    "resume_software_url": "/resumes/software-development.pdf",
+    "focus_areas": [
+      "Web Application Penetration Testing",
+      "Network Enumeration & Pivoting",
+      "Offensive Security & Exploitation",
+      "Zero-Knowledge Cryptography & Secure Storage",
+      "Python & Django REST Architecture",
+      "Threat Analysis & OWASP Mitigation"
+    ],
+    "currently_doing": [
+      "Pursuing B.Tech in IT at Jabalpur Engineering College (CGPA: 7.69)",
+      "Ranking in Global Top 4% on TryHackMe penetration testing labs",
+      "Developing automated security scanners and distributed web tools",
+      "Preparing advanced penetration testing certifications and vulnerability research"
+    ],
+    "education": [
+      {
+        "institution": "Jabalpur Engineering College",
+        "degree": "B.Tech in Information Technology",
+        "period": "2023 – 2027",
+        "grade": "CGPA: 7.69 (up to 6th Semester)",
+        "location": "Jabalpur, India"
+      },
+      {
+        "institution": "Bal Bhavan School — CBSE",
+        "degree": "Senior Secondary (Class XII & X)",
+        "period": "Completed",
+        "grade": "Class XII: 90.8% | Class X: 90.2%",
+        "location": "Bhopal, India"
+      }
+    ],
+    "certifications": [
+      {
+        "title": "eJPT (eLearnSecurity Junior Penetration Tester)",
+        "issuer": "eLearnSecurity / INE Security",
+        "type": "Professional Certification",
+        "description": "Conducted full kill-chain penetration tests across multiple network services, executing reconnaissance, enumeration, vulnerability identification, exploitation, and post-exploitation in segmented lab environments. Performed credential attacks, misconfiguration exploitation, privilege escalation, and lateral movement via pivoting."
+      },
+      {
+        "title": "TryHackMe Security Learning Paths",
+        "issuer": "TryHackMe",
+        "type": "Global Top 4%",
+        "description": "Ranked in the global top 4% on TryHackMe. Completed Pre Security, Cyber Security 101, and Jr Penetration Tester paths covering networking fundamentals, exploitation techniques, and web application security."
+      }
+    ],
+    "volunteering": [
+      {
+        "organization": "VulnCon - Security Conference",
+        "role": "Core Team Member & Media Lead",
+        "description": "Contributed to video editing and media content creation, served as the point of contact between the Media and Social Media teams, guided photographers and videographers for event coverage, and supported on-site event coordination."
+      }
+    ],
+    "about_terminal_content": "",
+    "updated_at": "2026-09-07T15:35:53.190Z"
+  }
+},
+{
+  "model": "portfolio.projectcategory",
+  "pk": 1,
+  "fields": {
+    "name": "Security",
+    "slug": "security",
+    "display_order": 1,
+    "is_active": true,
+    "created_at": "2026-09-07T15:35:53.180Z",
+    "updated_at": "2026-09-07T15:35:53.180Z"
+  }
+},
+{
+  "model": "portfolio.projectcategory",
+  "pk": 2,
+  "fields": {
+    "name": "Software Development",
+    "slug": "software-development",
+    "display_order": 2,
+    "is_active": true,
+    "created_at": "2026-09-07T15:35:53.182Z",
+    "updated_at": "2026-09-07T15:35:53.182Z"
+  }
+},
+{
+  "model": "portfolio.project",
+  "pk": 1,
+  "fields": {
+    "title": "PrivShare",
+    "slug": "privshare",
+    "short_description": "Zero-knowledge encrypted file sharing with client-side AES-GCM-256 and AWS S3.",
+    "long_description": "PrivShare is a secure, ephemeral file-sharing web application. Upload any file up to 200MB, receive a single share code, and share it securely. Files are encrypted on the client side using AES-GCM-256 before upload via pycryptodome; the server never receives or stores the decryption key.\r\n\r\nOffloaded encrypted blob storage to AWS S3 via django-storages and served streamed downloads as StreamingHttpResponse, supporting files up to 200MB without loading into server memory. Access is secured with UUID4 tokens against IDOR attacks, GCM authentication tags for tamper detection, and automated 6-hour file expiry via background tasks.",
+    "image": "",
+    "technologies": [
+      "Python",
+      "Django",
+      "Django REST Framework",
+      "PostgreSQL",
+      "AWS S3",
+      "Streamlit",
+      "AES-GCM-256",
+      "pycryptodome"
+    ],
+    "github_url": "https://github.com/hardikgaikwad/PrivShare",
+    "live_url": "https://privshare.streamlit.app/",
+    "documentation_url": "",
+    "featured": true,
+    "display_order": 1,
+    "status": "active",
+    "project_type": "security",
+    "repo_name": "hardikgaikwad/PrivShare",
+    "github_stars": 0,
+    "is_github_synced": true,
+    "terminal_filename": "privshare.txt",
+    "terminal_content": "",
+    "security_category": "Cryptography / E2EE",
+    "role": "Lead Architect & Security Engineer",
+    "highlights": [
+      "Built a zero-knowledge file-sharing app with client-side AES-GCM-256 E2EE using pycryptodome.",
+      "Offloaded encrypted blob storage to AWS S3, streaming downloads up to 200MB without memory overhead.",
+      "Secured access with UUID4 tokens against IDOR attacks, GCM authentication tags for tamper detection.",
+      "Automated 6-hour file expiration and secure storage purge."
+    ],
+    "challenges": "Designing a high-throughput streaming download pipeline that guarantees GCM tag verification without exhausting server memory on large blobs.",
+    "architecture": "Client Browser (AES-GCM-256 Encryption) ──> Django REST API ──> AWS S3 Storage Bucket ──> 6h Ephemeral Lifecycle",
+    "created_at": "2026-09-06T23:01:17.498Z",
+    "updated_at": "2026-09-07T14:42:52.665Z",
+    "categories": [
+      1,
+      2
+    ]
+  }
+},
+{
+  "model": "portfolio.project",
+  "pk": 3,
+  "fields": {
+    "title": "GetPYQJEC",
+    "slug": "getpyqjec",
+    "short_description": "Crowd-sourced Previous Year Question Paper compilation platform with on-demand PDF generation.",
+    "long_description": "GetPYQJEC is a student-built crowd-sourced platform to access and compile Previous Year Question Papers. Led backend development in a team to build a centralized platform organizing academic resources across college branches, semesters, and subjects.\r\n\r\nArchitected a Django REST API supporting structured metadata and file-management workflows for the React frontend. Implemented on-demand PDF compilation with pikepdf, allowing users to generate subject-wise or semester-wise question paper bundles by year range without manual compilation.",
+    "image": "",
+    "technologies": [
+      "Django",
+      "Django REST Framework",
+      "React",
+      "Vite",
+      "PostgreSQL",
+      "Supabase",
+      "pikepdf"
+    ],
+    "github_url": "https://github.com/hardikgaikwad/getpyqjec",
+    "live_url": "",
+    "documentation_url": "",
+    "featured": true,
+    "display_order": 3,
+    "status": "active",
+    "project_type": "software",
+    "repo_name": "hardikgaikwad/getpyqjec",
+    "github_stars": 0,
+    "is_github_synced": true,
+    "terminal_filename": "getpyqjec.txt",
+    "terminal_content": "",
+    "security_category": "Full-Stack Software",
+    "role": "Backend Lead & API Architect",
+    "highlights": [
+      "Led backend development in a team to centralize Previous Year Question Papers for the entire college.",
+      "Designed and implemented Django REST API supporting structured metadata and file-management workflows.",
+      "Implemented on-demand PDF compilation using pikepdf, eliminating manual student compilation.",
+      "React (Vite) frontend with branch, semester, and year-range filtering."
+    ],
+    "challenges": "Fast on-demand PDF stitching and compression across multiple year batches without latency bottlenecks.",
+    "architecture": "React Frontend ──> Django REST API ──> PostgreSQL / Supabase ──> On-demand pikepdf compiler ──> Compiled PDF Bundle",
+    "created_at": "2026-09-06T23:01:17.517Z",
+    "updated_at": "2026-09-07T14:44:24.664Z",
+    "categories": [
+      2
+    ]
+  }
+},
+{
+  "model": "portfolio.project",
+  "pk": 5,
+  "fields": {
+    "title": "XSScan",
+    "slug": "xsscan",
+    "short_description": "Context-aware reflected XSS scanner with DOM tree response verification.",
+    "long_description": "XSScan is an automated, asynchronous vulnerability scanner built in Python to detect server-side reflected Cross-Site Scripting (XSS). It systematically discovers domain-scoped targets and fuzzes GET/POST input vectors using context-specific payloads tailored for HTML, JavaScript, SVG, and attribute contexts.\r\n\r\nEngineered a resilient detection engine that parses HTTP responses into DOM trees to guarantee injected payloads execute unescaped in the browser context. Built a scalable testing pipeline with configurable rate limiting, connection pooling, and custom header support for assessing authenticated endpoints. Tested extensively against OWASP Mutillidae II.",
+    "image": "",
+    "technologies": [
+      "Python",
+      "AsyncIO",
+      "HTTP Protocol",
+      "DOM Analysis",
+      "OWASP Mutillidae II"
+    ],
+    "github_url": "https://github.com/hardikgaikwad/XSScan",
+    "live_url": "",
+    "documentation_url": "",
+    "featured": true,
+    "display_order": 2,
+    "status": "active",
+    "project_type": "security",
+    "repo_name": "hardikgaikwad/XSScan",
+    "github_stars": 0,
+    "is_github_synced": true,
+    "terminal_filename": "xsscan.txt",
+    "terminal_content": "",
+    "security_category": "AppSec & Pentesting",
+    "role": "Security Tool Developer",
+    "highlights": [
+      "Automated async vulnerability scanner mapping domain-scoped targets with GET/POST vector fuzzing.",
+      "Context-specific payload generation tailored for HTML, JS, SVG, and attribute reflection contexts.",
+      "DOM tree parsing engine to confirm unescaped execution and prevent false positives.",
+      "Configurable rate-limiting, connection pooling, and authenticated session header support."
+    ],
+    "challenges": "Eliminating false-positive reflected strings by inspecting the actual DOM parse tree to verify unescaped execution capability.",
+    "architecture": "Target Discovery ──> Parameter Fuzzing Engine ──> Context Payloads ──> HTTP Async Pipeline ──> DOM Execution Verification",
+    "created_at": "2026-09-06T23:59:15.515Z",
+    "updated_at": "2026-09-07T14:43:32.849Z",
+    "categories": [
+      1
+    ]
+  }
+},
+{
+  "model": "portfolio.project",
+  "pk": 6,
+  "fields": {
+    "title": "Home Cybersecurity Lab & Network Simulation",
+    "slug": "cybersecurity-lab",
+    "short_description": "Virtualized network lab with segmented attacker/target subnets, pfSense routing, and VulnHub machines.",
+    "long_description": "Built a virtualized enterprise network security lab using VMware and pfSense as firewall and router to simulate segmented attacker and target networks. Deployed vulnerable environments including VulnHub machines, OWASP Broken Web Applications, and DVWA alongside a Kali Linux attacker machine to perform end-to-end penetration testing, including network enumeration, vulnerability exploitation, and privilege escalation.",
+    "image": "",
+    "technologies": [
+      "pfSense",
+      "Kali Linux",
+      "VMware",
+      "VirtualBox",
+      "VulnHub",
+      "OWASP BWA",
+      "DVWA",
+      "Nmap",
+      "Metasploit",
+      "Wireshark"
+    ],
+    "github_url": "",
+    "live_url": "",
+    "documentation_url": "",
+    "featured": true,
+    "display_order": 4,
+    "status": "active",
+    "project_type": "lab",
+    "repo_name": "",
+    "github_stars": 0,
+    "is_github_synced": false,
+    "terminal_filename": "home-lab.txt",
+    "terminal_content": "",
+    "security_category": "Network & Lab Environment",
+    "role": "Network & Security Architect",
+    "highlights": [
+      "Configured pfSense router/firewall with isolated VLANs simulating corporate network segmentation.",
+      "Deployed vulnerable enterprise targets (VulnHub, OWASP BWA, DVWA) alongside Kali Linux attacker VM.",
+      "Conducted hands-on kill-chain exercises: reconnaissance, enumeration, exploitation, and pivoting.",
+      "Analyzed packet captures in Wireshark to correlate attacker signatures with defensive telemetry."
+    ],
+    "challenges": "Configuring routing rules and NAT across subnets to enable realistic attacker pivoting while preventing host system leakage.",
+    "architecture": "Kali Linux (Attacker VM) ──> pfSense Firewall / Router ──> Segmented Target Subnets (VulnHub / OWASP / DVWA)",
+    "created_at": "2026-09-06T23:59:15.538Z",
+    "updated_at": "2026-09-06T23:59:15.538Z",
+    "categories": [
+      1
+    ]
+  }
+},
+{
+  "model": "portfolio.skillcategory",
+  "pk": 5,
+  "fields": {
+    "name": "Languages",
+    "display_order": 1
+  }
+},
+{
+  "model": "portfolio.skillcategory",
+  "pk": 6,
+  "fields": {
+    "name": "Security Tools",
+    "display_order": 2
+  }
+},
+{
+  "model": "portfolio.skillcategory",
+  "pk": 7,
+  "fields": {
+    "name": "Frameworks & Libraries",
+    "display_order": 3
+  }
+},
+{
+  "model": "portfolio.skillcategory",
+  "pk": 8,
+  "fields": {
+    "name": "Databases & Cloud",
+    "display_order": 4
+  }
+},
+{
+  "model": "portfolio.skillcategory",
+  "pk": 9,
+  "fields": {
+    "name": "Platforms & Environments",
+    "display_order": 5
+  }
+},
+{
+  "model": "portfolio.skillcategory",
+  "pk": 10,
+  "fields": {
+    "name": "Security Concepts",
+    "display_order": 6
+  }
+},
+{
+  "model": "portfolio.skill",
+  "pk": 25,
+  "fields": {
+    "name": "Python",
+    "category": 5,
+    "display_order": 1
+  }
+},
+{
+  "model": "portfolio.skill",
+  "pk": 26,
+  "fields": {
+    "name": "C++",
+    "category": 5,
+    "display_order": 2
+  }
+},
+{
+  "model": "portfolio.skill",
+  "pk": 27,
+  "fields": {
+    "name": "JavaScript",
+    "category": 5,
+    "display_order": 3
+  }
+},
+{
+  "model": "portfolio.skill",
+  "pk": 28,
+  "fields": {
+    "name": "Bash",
+    "category": 5,
+    "display_order": 4
+  }
+},
+{
+  "model": "portfolio.skill",
+  "pk": 29,
+  "fields": {
+    "name": "SQL",
+    "category": 5,
+    "display_order": 5
+  }
+},
+{
+  "model": "portfolio.skill",
+  "pk": 30,
+  "fields": {
+    "name": "HTML",
+    "category": 5,
+    "display_order": 6
+  }
+},
+{
+  "model": "portfolio.skill",
+  "pk": 31,
+  "fields": {
+    "name": "CSS",
+    "category": 5,
+    "display_order": 7
+  }
+},
+{
+  "model": "portfolio.skill",
+  "pk": 46,
+  "fields": {
+    "name": "PostgreSQL",
+    "category": 8,
+    "display_order": 1
+  }
+},
+{
+  "model": "portfolio.skill",
+  "pk": 47,
+  "fields": {
+    "name": "Supabase",
+    "category": 8,
+    "display_order": 2
+  }
+},
+{
+  "model": "portfolio.skill",
+  "pk": 48,
+  "fields": {
+    "name": "AWS S3",
+    "category": 8,
+    "display_order": 3
+  }
+},
+{
+  "model": "portfolio.skill",
+  "pk": 49,
+  "fields": {
+    "name": "Cloudinary",
+    "category": 8,
+    "display_order": 4
+  }
+},
+{
+  "model": "portfolio.skill",
+  "pk": 50,
+  "fields": {
+    "name": "Linux",
+    "category": 9,
+    "display_order": 1
+  }
+},
+{
+  "model": "portfolio.skill",
+  "pk": 51,
+  "fields": {
+    "name": "Windows",
+    "category": 9,
+    "display_order": 2
+  }
+},
+{
+  "model": "portfolio.skill",
+  "pk": 52,
+  "fields": {
+    "name": "macOS",
+    "category": 9,
+    "display_order": 3
+  }
+},
+{
+  "model": "portfolio.skill",
+  "pk": 53,
+  "fields": {
+    "name": "VMware",
+    "category": 9,
+    "display_order": 4
+  }
+},
+{
+  "model": "portfolio.skill",
+  "pk": 54,
+  "fields": {
+    "name": "VirtualBox",
+    "category": 9,
+    "display_order": 5
+  }
+},
+{
+  "model": "portfolio.skill",
+  "pk": 55,
+  "fields": {
+    "name": "Git",
+    "category": 9,
+    "display_order": 6
+  }
+},
+{
+  "model": "portfolio.skill",
+  "pk": 56,
+  "fields": {
+    "name": "Docker",
+    "category": 9,
+    "display_order": 7
+  }
+},
+{
+  "model": "portfolio.skill",
+  "pk": 57,
+  "fields": {
+    "name": "OWASP Top 10",
+    "category": 10,
+    "display_order": 1
+  }
+},
+{
+  "model": "portfolio.skill",
+  "pk": 58,
+  "fields": {
+    "name": "Web Application Pentesting",
+    "category": 10,
+    "display_order": 2
+  }
+},
+{
+  "model": "portfolio.skill",
+  "pk": 59,
+  "fields": {
+    "name": "Network Enumeration",
+    "category": 10,
+    "display_order": 3
+  }
+},
+{
+  "model": "portfolio.skill",
+  "pk": 60,
+  "fields": {
+    "name": "Exploitation",
+    "category": 10,
+    "display_order": 4
+  }
+},
+{
+  "model": "portfolio.skill",
+  "pk": 61,
+  "fields": {
+    "name": "Privilege Escalation",
+    "category": 10,
+    "display_order": 5
+  }
+},
+{
+  "model": "portfolio.skill",
+  "pk": 62,
+  "fields": {
+    "name": "Threat Analysis",
+    "category": 10,
+    "display_order": 6
+  }
+},
+{
+  "model": "portfolio.skill",
+  "pk": 63,
+  "fields": {
+    "name": "Secure API Design",
+    "category": 10,
+    "display_order": 7
+  }
+},
+{
+  "model": "portfolio.skill",
+  "pk": 64,
+  "fields": {
+    "name": "Lateral Movement & Pivoting",
+    "category": 10,
+    "display_order": 8
+  }
+},
+{
+  "model": "portfolio.skill",
+  "pk": 72,
+  "fields": {
+    "name": "Django",
+    "category": 7,
+    "display_order": 0
+  }
+},
+{
+  "model": "portfolio.skill",
+  "pk": 73,
+  "fields": {
+    "name": "Django REST Framework",
+    "category": 7,
+    "display_order": 1
+  }
+},
+{
+  "model": "portfolio.skill",
+  "pk": 74,
+  "fields": {
+    "name": "Streamlit",
+    "category": 7,
+    "display_order": 2
+  }
+},
+{
+  "model": "portfolio.skill",
+  "pk": 75,
+  "fields": {
+    "name": "pikepdf",
+    "category": 7,
+    "display_order": 3
+  }
+},
+{
+  "model": "portfolio.skill",
+  "pk": 76,
+  "fields": {
+    "name": "Burp Suite",
+    "category": 6,
+    "display_order": 0
+  }
+},
+{
+  "model": "portfolio.skill",
+  "pk": 77,
+  "fields": {
+    "name": "Metasploit",
+    "category": 6,
+    "display_order": 1
+  }
+},
+{
+  "model": "portfolio.skill",
+  "pk": 78,
+  "fields": {
+    "name": "Nmap",
+    "category": 6,
+    "display_order": 2
+  }
+},
+{
+  "model": "portfolio.skill",
+  "pk": 79,
+  "fields": {
+    "name": "Wireshark",
+    "category": 6,
+    "display_order": 3
+  }
+},
+{
+  "model": "portfolio.skill",
+  "pk": 80,
+  "fields": {
+    "name": "Hydra",
+    "category": 6,
+    "display_order": 4
+  }
+},
+{
+  "model": "portfolio.skill",
+  "pk": 81,
+  "fields": {
+    "name": "Gobuster",
+    "category": 6,
+    "display_order": 5
+  }
+},
+{
+  "model": "portfolio.skill",
+  "pk": 82,
+  "fields": {
+    "name": "Wfuzz",
+    "category": 6,
+    "display_order": 6
+  }
+},
+{
+  "model": "portfolio.sociallink",
+  "pk": 4,
+  "fields": {
+    "platform": "github",
+    "label": "GitHub",
+    "url": "https://github.com/hardikgaikwad",
+    "icon": "github",
+    "display_order": 1
+  }
+},
+{
+  "model": "portfolio.sociallink",
+  "pk": 5,
+  "fields": {
+    "platform": "linkedin",
+    "label": "LinkedIn",
+    "url": "https://linkedin.com/in/hardikgaikwad",
+    "icon": "linkedin",
+    "display_order": 2
+  }
+},
+{
+  "model": "portfolio.sociallink",
+  "pk": 6,
+  "fields": {
+    "platform": "email",
+    "label": "Email Dispatch",
+    "url": "mailto:hardikgaikwad04@gmail.com",
+    "icon": "email",
+    "display_order": 3
+  }
+},
+{
+  "model": "portfolio.sitesettings",
+  "pk": 1,
+  "fields": {
+    "site_title": "Hardik Gaikwad // Cybersecurity Engineer & Full-Stack Developer",
+    "terminal_welcome": "Hardik Gaikwad Portfolio Workstation v2.5.0\nType \"help\" to view commands.",
+    "meta_description": "Personal portfolio of Hardik Gaikwad: Cybersecurity researcher, eJPT certified, and full-stack software engineer.",
+    "footer_text": "HARDIK GAIKWAD. ALL SYSTEMS MONITORED & SECURED.",
+    "updated_at": "2026-09-06T23:59:16.142Z"
+  }
+},
+{
+  "model": "portfolio.education",
+  "pk": 1,
+  "fields": {
+    "institution": "Jabalpur Engineering College (JEC)",
+    "degree": "B.Tech in Information Technology",
+    "period": "2023 – 2027",
+    "grade": "CGPA: 7.69 (up to 6th Semester)",
+    "location": "Jabalpur, Madhya Pradesh, India",
+    "display_order": 1
+  }
+},
+{
+  "model": "portfolio.education",
+  "pk": 2,
+  "fields": {
+    "institution": "Bal Bhavan School — CBSE",
+    "degree": "Senior Secondary (XII) & Secondary (X)",
+    "period": "2021 – 2023",
+    "grade": "Class XII: 90.8% | Class X: 90.2%",
+    "location": "Bhopal, Madhya Pradesh, India",
+    "display_order": 2
+  }
+},
+{
+  "model": "portfolio.certification",
+  "pk": 1,
+  "fields": {
+    "title": "eJPT (eLearnSecurity Junior Penetration Tester)",
+    "issuer": "eLearnSecurity / INE Security",
+    "status": "Active / Certified",
+    "description": "Full kill-chain network pentesting, reconnaissance, privilege escalation, lateral pivoting across segmented networks.",
+    "url": "",
+    "display_order": 1
+  }
+},
+{
+  "model": "portfolio.certification",
+  "pk": 2,
+  "fields": {
+    "title": "TryHackMe Security Learning Paths",
+    "issuer": "TryHackMe",
+    "status": "Global Top 4%",
+    "description": "Pre Security, Cyber Security 101, Jr Penetration Tester learning paths completed.",
+    "url": "https://tryhackme.com",
+    "display_order": 2
+  }
+}
+]
