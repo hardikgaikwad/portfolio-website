@@ -1,8 +1,11 @@
-/* RetroTitle SVG typography styles */
+/* ═══════════════════════════════════════════════════════════
+   RetroTitle.css — Wide Horizontal Wordmark Styling
+   Recreates the "LECTURE HALL" retro display poster aesthetic
+   ═══════════════════════════════════════════════════════════ */
 
 .retro-title {
   width: 100%;
-  max-width: 820px;
+  max-width: min(90vw, 1340px);
   margin: 0 auto;
   user-select: none;
 }
@@ -10,30 +13,38 @@
 .retro-title__svg {
   width: 100%;
   height: auto;
+  display: block;
   overflow: visible;
 }
 
 /* All text layers share the same display font (Thugolatz) */
+.retro-title__shadow-deep,
 .retro-title__shadow,
 .retro-title__outline,
 .retro-title__fill,
 .retro-title__texture {
   font-family: var(--font-display, 'Thugolatz', 'thugolatz', 'Syne', 'Archivo Black', Impact, sans-serif);
-  font-size: 96px;
+  font-size: 94px;
   font-weight: normal;
-  letter-spacing: 0.10em;
+  letter-spacing: 0.035em;
+  word-spacing: 0.04em;
   text-transform: uppercase;
   dominant-baseline: central;
   text-anchor: middle;
 }
 
-/* Shadow — dark navy retro offset */
-.retro-title__shadow {
+/* Deep navy 3D block extrusion / drop shadow */
+.retro-title__shadow-deep {
   fill: #0B1929;
+  opacity: 0.95;
+}
+
+.retro-title__shadow {
+  fill: #102B47;
   opacity: 0.85;
 }
 
-/* Outline — navy contour behind fill */
+/* Dark navy contour framing */
 .retro-title__outline {
   fill: none;
   stroke: #183F68;
@@ -43,22 +54,16 @@
   paint-order: stroke;
 }
 
-/* Main fill — vibrant orange/golden poster gradient */
+/* Main gradient fill — burnt orange to golden yellow */
 .retro-title__fill {
-  fill: url(#retroGradient);
+  fill: url(#retroOneLineGradient);
   stroke: none;
 }
-.retro-title__fill--line1 {
-  fill: url(#retroGradient1);
-}
-.retro-title__fill--line2 {
-  fill: url(#retroGradient2);
-}
 
-/* Texture overlay — subtle horizontal lines */
+/* Horizontal line print texture overlay */
 .retro-title__texture {
-  fill: url(#retroLines);
-  opacity: 0.28;
+  fill: url(#retroPrintStripes);
+  opacity: 0.35;
   pointer-events: none;
 }
 
@@ -81,14 +86,25 @@
   opacity: 0.95;
 }
 
-/* Responsive scaling */
+/* Responsive scaling for tablet and mobile */
+@media (max-width: 1024px) {
+  .retro-title {
+    max-width: 95vw;
+  }
+}
+
 @media (max-width: 768px) {
+  .retro-title {
+    max-width: 98vw;
+  }
+  .retro-title__shadow-deep,
   .retro-title__shadow,
   .retro-title__outline,
   .retro-title__fill,
   .retro-title__texture {
-    font-size: 78px;
-    letter-spacing: 0.08em;
+    font-size: 80px;
+    letter-spacing: 0.03em;
+    word-spacing: 0.08em;
   }
   .retro-title__outline {
     stroke-width: 5px;
@@ -96,12 +112,14 @@
 }
 
 @media (max-width: 480px) {
+  .retro-title__shadow-deep,
   .retro-title__shadow,
   .retro-title__outline,
   .retro-title__fill,
   .retro-title__texture {
-    font-size: 60px;
-    letter-spacing: 0.06em;
+    font-size: 76px;
+    letter-spacing: 0.01em;
+    word-spacing: 0.06em;
   }
   .retro-title__outline {
     stroke-width: 4px;
