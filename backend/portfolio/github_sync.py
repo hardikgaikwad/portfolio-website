@@ -5,21 +5,34 @@ Fetches public repository data and READMEs from github.com/hardikgaikwad
 and synchronizes with the portfolio database.
 """
 
+import re
 import json
+import logging
 import urllib.request
 import urllib.error
+from django.conf import settings
 from django.utils.text import slugify
 from .models import Project
 
+logger = logging.getLogger(__name__)
+
 GITHUB_USERNAME = 'hardikgaikwad'
 REPOS_API_URL = f'https://api.github.com/users/{GITHUB_USERNAME}/repos'
+
+
+def _get_github_headers():
+    headers = {'User-Agent': 'Portfolio-Sync-Engine/1.0'}
+    token = getattr(settings, 'GITHUB_TOKEN', '')
+    if token:
+        headers['Authorization'] = f'Bearer {token}'
+    return headers
 
 
 def fetch_github_repos():
     """Fetch repository list from GitHub API."""
     req = urllib.request.Request(
         REPOS_API_URL,
-        headers={'User-Agent': 'Portfolio-Sync-Engine/1.0'}
+        headers=_get_github_headers()
     )
     try:
         with urllib.request.urlopen(req, timeout=10) as response:
@@ -27,22 +40,28 @@ def fetch_github_repos():
                 data = json.loads(response.read().decode('utf-8'))
                 return data
     except Exception as e:
-        print(f"Error fetching GitHub repos: {e}")
+        logger.warning("Error fetching GitHub repos: %s", e)
     return []
 
 
 def fetch_repo_readme(repo_name):
     """Fetch raw README.md for a repository."""
+    # Security: Ensure repo_name contains only valid GitHub repository characters
+    if not repo_name or not re.match(r'^[a-zA-Z0-9._-]+$', str(repo_name)):
+        logger.warning("Invalid repo name format rejected: %r", repo_name)
+        return ''
+
     for branch in ['main', 'master']:
         url = f'https://raw.githubusercontent.com/{GITHUB_USERNAME}/{repo_name}/{branch}/README.md'
         try:
-            req = urllib.request.Request(url, headers={'User-Agent': 'Portfolio-Sync-Engine/1.0'})
+            req = urllib.request.Request(url, headers=_get_github_headers())
             with urllib.request.urlopen(req, timeout=6) as response:
                 if response.status == 200:
                     return response.read().decode('utf-8')
         except Exception:
             continue
     return ''
+
 
 
 def sync_github_projects(auto_publish_featured=True):

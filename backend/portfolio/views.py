@@ -4,6 +4,8 @@ Public API views for the portfolio.
 These endpoints are read-only and accessible without authentication.
 """
 
+import logging
+from urllib.parse import urlparse
 from django.shortcuts import redirect
 from django.http import Http404
 from django.db import connection
@@ -11,6 +13,26 @@ from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
+
+logger = logging.getLogger(__name__)
+
+
+def _is_safe_redirect_url(url):
+    """
+    Validate that a redirect target is either a safe relative path or a valid HTTP/HTTPS URL.
+    Rejects dangerous schemes like javascript:, data:, and protocol-relative '//'.
+    """
+    if not url or not isinstance(url, str):
+        return False
+    stripped = url.strip()
+    if stripped.startswith('/') and not stripped.startswith('//'):
+        return True
+    try:
+        parsed = urlparse(stripped)
+        return parsed.scheme in ('http', 'https') and bool(parsed.netloc)
+    except Exception:
+        return False
+
 
 from .models import (
     Profile, Project, ProjectCategory, SkillCategory, SocialLink,
@@ -65,7 +87,13 @@ class ResumeDownloadView(APIView):
         else:
             url = profile.resume_security_url or '/resumes/cybersecurity.pdf'
 
+        # Security: Enforce safe redirect scheme
+        if not _is_safe_redirect_url(url):
+            logger.warning("Unsafe resume redirect target detected: %r. Reverting to default.", url)
+            url = '/resumes/cybersecurity.pdf'
+
         return redirect(url)
+
 
 
 class ProfileView(APIView):
@@ -189,10 +217,12 @@ class HealthCheckView(APIView):
                     status=status.HTTP_200_OK
                 )
             except Exception as exc:
+                logger.error("Health check database query failed: %s", exc, exc_info=True)
                 return Response(
-                    {"status": "unhealthy", "database": str(exc)},
+                    {"status": "unhealthy", "database": "unavailable"},
                     status=status.HTTP_503_SERVICE_UNAVAILABLE
                 )
+
 
         return Response(
             {"status": "healthy", "service": "portfolio-backend"},

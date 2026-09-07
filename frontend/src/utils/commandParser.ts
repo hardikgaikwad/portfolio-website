@@ -6,6 +6,15 @@
 import type { Profile, Project, SocialLink, SkillCategory, Education, Certification } from '../types/api';
 import type { FSNode } from './virtualFileSystem';
 import { resolvePath, listDir } from './virtualFileSystem';
+import { isSafeUrl } from './urlSecurity';
+
+function safeOpenWindow(url: string | null | undefined): boolean {
+  if (url && isSafeUrl(url)) {
+    window.open(url, '_blank', 'noopener,noreferrer');
+    return true;
+  }
+  return false;
+}
 
 export interface CommandOutput {
   type: 'text' | 'error' | 'info' | 'link' | 'system';
@@ -302,11 +311,11 @@ function cmdOpen(args: string[], projects: Project[], _navigate?: (path: string)
     };
   }
 
-  if (project.live_url) {
-    window.open(project.live_url, '_blank');
+  if (project.live_url && isSafeUrl(project.live_url)) {
+    safeOpenWindow(project.live_url);
     return { outputs: [{ type: 'info', content: `Launching live deployment: ${project.title} (${project.live_url})...` }] };
-  } else if (project.github_url) {
-    window.open(project.github_url, '_blank');
+  } else if (project.github_url && isSafeUrl(project.github_url)) {
+    safeOpenWindow(project.github_url);
     return { outputs: [{ type: 'info', content: `Opening repository: ${project.title} (${project.github_url})...` }] };
   }
 
@@ -396,21 +405,25 @@ function cmdResume(args: string[], profile: Profile | null): CommandResult {
   const softUrl = profile?.resume_software_url || profile?.resume_url || '/resumes/software-development.pdf';
 
   if (flag === '--security' || flag === '-s') {
-    window.open(secUrl, '_blank');
+    if (isSafeUrl(secUrl)) {
+      safeOpenWindow(secUrl);
+    }
     return {
       outputs: [
         { type: 'info', content: 'Downloading cybersecurity resume...' },
-        { type: 'link', content: `LINK: ${secUrl}`, url: secUrl },
+        { type: 'link', content: `LINK: ${secUrl}`, url: isSafeUrl(secUrl) ? secUrl : undefined },
       ],
     };
   }
 
   if (flag === '--software' || flag === '-d') {
-    window.open(softUrl, '_blank');
+    if (isSafeUrl(softUrl)) {
+      safeOpenWindow(softUrl);
+    }
     return {
       outputs: [
         { type: 'info', content: 'Downloading software development resume...' },
-        { type: 'link', content: `LINK: ${softUrl}`, url: softUrl },
+        { type: 'link', content: `LINK: ${softUrl}`, url: isSafeUrl(softUrl) ? softUrl : undefined },
       ],
     };
   }
@@ -476,28 +489,34 @@ function cmdSocial(social: SocialLink[], fs: FSNode): CommandResult {
 }
 
 function cmdOpenUrl(url: string, message: string): CommandResult {
-  window.open(url, '_blank');
-  return {
-    outputs: [
-      { type: 'info', content: message },
-      { type: 'link', content: `Opened: ${url}`, url },
-    ],
-  };
+  if (isSafeUrl(url)) {
+    safeOpenWindow(url);
+    return {
+      outputs: [
+        { type: 'info', content: message },
+        { type: 'link', content: `Opened: ${url}`, url },
+      ],
+    };
+  }
+  return { outputs: [{ type: 'error', content: 'Blocked attempt to open invalid or unsafe URL.' }] };
 }
 
 function cmdOpenSocial(platform: string, social: SocialLink[], profile: Profile | null): CommandResult {
   const link = social.find(s => s.platform === platform);
   if (link) {
     const url = platform === 'email' ? `mailto:${link.url}` : link.url;
-    window.open(url, '_blank');
-    return {
-      outputs: [{ type: 'info', content: `Opening ${link.platform_display || platform} (${link.url})...` }],
-    };
+    if (isSafeUrl(url)) {
+      safeOpenWindow(url);
+      return {
+        outputs: [{ type: 'info', content: `Opening ${link.platform_display || platform} (${link.url})...` }],
+      };
+    }
+    return { outputs: [{ type: 'error', content: `Invalid or unsafe URL format for ${platform}.` }] };
   }
 
   if (platform === 'email') {
     const mailto = `mailto:${profile?.email || 'hardikgaikwad04@gmail.com'}`;
-    window.open(mailto, '_blank');
+    safeOpenWindow(mailto);
     return { outputs: [{ type: 'info', content: `Opening ${mailto}...` }] };
   }
 

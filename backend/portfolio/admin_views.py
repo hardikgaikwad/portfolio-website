@@ -5,11 +5,14 @@ These endpoints require JWT authentication and admin (staff) privileges.
 Provides full CRUD for all portfolio content.
 """
 
+import logging
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from django.conf import settings
+
+logger = logging.getLogger(__name__)
 
 from .models import Profile, Project, SkillCategory, Skill, SocialLink, SiteSettings
 from .serializers import (
@@ -160,12 +163,21 @@ class AdminResumeUploadView(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        # Validate file type
-        allowed_extensions = ['pdf', 'doc', 'docx']
+        # Validate file type - strictly PDF
+        allowed_extensions = ['pdf']
         ext = resume_file.name.rsplit('.', 1)[-1].lower() if '.' in resume_file.name else ''
-        if ext not in allowed_extensions:
+        if ext not in allowed_extensions or getattr(resume_file, 'content_type', '') != 'application/pdf':
             return Response(
-                {'detail': f'Invalid file type. Allowed: {", ".join(allowed_extensions)}'},
+                {'detail': 'Invalid file type. Only PDF documents are allowed.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # Security: Validate PDF magic bytes (%PDF-) to prevent spoofed/polyglot files
+        header = resume_file.read(5)
+        resume_file.seek(0)
+        if not header.startswith(b'%PDF-'):
+            return Response(
+                {'detail': 'Corrupted or invalid PDF document.'},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
@@ -210,7 +222,11 @@ class AdminGitHubSyncView(APIView):
             results = sync_github_projects(auto_publish_featured=True)
             return Response({'status': 'success', 'synced': results}, status=status.HTTP_200_OK)
         except Exception as e:
-            return Response({'status': 'error', 'detail': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            logger.error("GitHub repository synchronization failed: %s", e, exc_info=True)
+            return Response(
+                {'status': 'error', 'detail': 'GitHub synchronization failed. Please check server logs.'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 
 # ──────────────────────────────────────────────────────────────

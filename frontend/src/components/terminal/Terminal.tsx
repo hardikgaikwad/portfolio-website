@@ -9,6 +9,7 @@ import { buildFileSystem } from '../../utils/virtualFileSystem';
 import type { FSNode } from '../../utils/virtualFileSystem';
 import { executeCommand, getCompletions } from '../../utils/commandParser';
 import type { CommandOutput } from '../../utils/commandParser';
+import { isSafeUrl } from '../../utils/urlSecurity';
 import './Terminal.css';
 
 interface Props {
@@ -199,7 +200,7 @@ export default function Terminal({ profile, projects, skills, social, education,
                 <div className="terminal__output">
                   {line.outputs.map((out, j) => (
                     <div key={j} className={`terminal__output-line terminal__output--${out.type}`}>
-                      {out.url ? (
+                      {out.url && isSafeUrl(out.url) ? (
                         <a href={out.url} target="_blank" rel="noopener noreferrer" className="terminal__link">
                           {formatOutput(out.content)}
                         </a>
@@ -248,6 +249,7 @@ export default function Terminal({ profile, projects, skills, social, education,
  * Format terminal output — handle custom markers.
  */
 function formatOutput(content: string): string {
-  // Strip custom dir markers for now
-  return content.replace(/\x1b\[dir\]/g, '').replace(/\x1b\[\/dir\]/g, '');
+  // Strip custom dir markers cleanly without control-regex
+  return content.split('\u001b[dir]').join('').split('\u001b[/dir]').join('');
 }
+
