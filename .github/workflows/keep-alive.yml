@@ -30,7 +30,7 @@ jobs:
           cat "$RESPONSE_FILE"
           echo ""
           if [ "$HTTP_STATUS" -eq 200 ]; then
-            echo "SUCCESS: Backend is healthy and database is connected!"
+            echo "SUCCESS: Backend is healthy and awake!"
           else
             echo "WARNING: Health check returned HTTP $HTTP_STATUS"
             exit 1

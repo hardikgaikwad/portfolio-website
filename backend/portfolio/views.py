@@ -173,22 +173,30 @@ class CertificationListView(generics.ListAPIView):
 class HealthCheckView(APIView):
     """
     GET /api/health/
-    Health check endpoint that tests application responsiveness and database connectivity.
-    Ideal for Koyeb / UptimeRobot keep-alive pings.
+    Lightweight application-level health check endpoint.
+    Keeps Render warm without waking or consuming Neon DB serverless compute hours.
+    Pass ?check_db=true only when database verification is explicitly desired.
     """
     permission_classes = [AllowAny]
 
     def get(self, request):
-        try:
-            with connection.cursor() as cursor:
-                cursor.execute("SELECT 1;")
-            return Response(
-                {"status": "healthy", "database": "connected"},
-                status=status.HTTP_200_OK
-            )
-        except Exception as exc:
-            return Response(
-                {"status": "unhealthy", "database": str(exc)},
-                status=status.HTTP_503_SERVICE_UNAVAILABLE
-            )
+        if request.query_params.get('check_db') == 'true':
+            try:
+                with connection.cursor() as cursor:
+                    cursor.execute("SELECT 1;")
+                return Response(
+                    {"status": "healthy", "database": "connected"},
+                    status=status.HTTP_200_OK
+                )
+            except Exception as exc:
+                return Response(
+                    {"status": "unhealthy", "database": str(exc)},
+                    status=status.HTTP_503_SERVICE_UNAVAILABLE
+                )
+
+        return Response(
+            {"status": "healthy", "service": "portfolio-backend"},
+            status=status.HTTP_200_OK
+        )
+
 
