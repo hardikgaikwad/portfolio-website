@@ -1,5 +1,6 @@
 /* ═══════════════════════════════════════════════════════════
    GraffitiLayer.css — Hand-Sprayed Cybersecurity Graffiti
+   Multi-Style Collection: Stencils, Bubbly, Incomplete, Doodles
    Embedded in the continuous graph-paper page layer
    ═══════════════════════════════════════════════════════════ */
 
@@ -27,7 +28,7 @@
   transition: opacity 0.2s ease;
 }
 
-/* Position positioning */
+/* Position positioning fallback if marginOffsetPx not inline */
 .graffiti-item--left {
   left: clamp(14px, 3vw, 55px);
 }
@@ -74,6 +75,11 @@
   filter: url(#sprayDistort);
 }
 
+/* Style variant containers */
+.graffiti-item--faded {
+  filter: drop-shadow(1px 1px 0px rgba(239, 233, 215, 0.35)) blur(0.2px);
+}
+
 /* Word typography */
 .graffiti-word {
   font-family: var(--font-display, sans-serif);
@@ -84,6 +90,33 @@
   line-height: 1.05;
   white-space: nowrap;
   text-shadow: 1px 1px 0px rgba(14, 42, 71, 0.15);
+}
+
+/* Bubbly curved graffiti style */
+.graffiti-word--bubbly {
+  font-family: 'Outfit', -apple-system, sans-serif;
+  font-size: 1.55rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  border-radius: 4px;
+  text-shadow: 2px 2px 0px rgba(14, 42, 71, 0.18);
+  filter: drop-shadow(0 0 1px currentColor);
+}
+
+/* Incomplete / trailing stencil cut-off effect */
+.graffiti-word--incomplete {
+  font-family: var(--font-mono, monospace);
+  letter-spacing: 0.14em;
+  font-weight: 900;
+  opacity: 0.78;
+}
+
+/* Skewed handwritten marker feel */
+.graffiti-word--handwritten {
+  font-family: var(--font-mono, monospace);
+  font-style: italic;
+  font-weight: 800;
+  letter-spacing: 0.05em;
 }
 
 .graffiti-subtext {
@@ -113,10 +146,10 @@
     transform: scale(0.85);
   }
   .graffiti-item--left {
-    left: clamp(8px, 2vw, 24px);
+    left: clamp(8px, 2vw, 24px) !important;
   }
   .graffiti-item--right {
-    right: clamp(8px, 2vw, 24px);
+    right: clamp(8px, 2vw, 24px) !important;
   }
 }
 
@@ -128,12 +161,15 @@
     transform: scale(0.7);
   }
   .graffiti-item--left {
-    left: 6px;
+    left: 6px !important;
   }
   .graffiti-item--right {
-    right: 6px;
+    right: 6px !important;
   }
   .graffiti-word {
     font-size: 1.15rem;
+  }
+  .graffiti-word--bubbly {
+    font-size: 1.25rem;
   }
 }

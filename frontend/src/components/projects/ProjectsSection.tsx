@@ -3,44 +3,53 @@
    ═══════════════════════════════════════════════════════════ */
 
 import { useState, useMemo } from 'react';
-import type { Project } from '../../types/api';
+import type { Project, ProjectCategory } from '../../types/api';
 import ProjectCard from './ProjectCard';
 import ProjectDetailModal from './ProjectDetailModal';
 import './Projects.css';
 
 interface Props {
   projects: Project[];
+  projectFilters?: ProjectCategory[];
 }
 
-export default function ProjectsSection({ projects }: Props) {
+const DEFAULT_FILTERS: ProjectCategory[] = [
+  { id: 1, name: 'Security', slug: 'security', display_order: 1, is_active: true },
+  { id: 2, name: 'Software Development', slug: 'software-development', display_order: 2, is_active: true },
+];
+
+export default function ProjectsSection({ projects, projectFilters }: Props) {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-  const [activeFilter, setActiveFilter] = useState<'ALL' | 'FEATURED' | 'SECURITY' | 'SOFTWARE' | 'LAB' | string>('ALL');
+  const [activeFilter, setActiveFilter] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Extract distinct categories or security domains
-  const categories = useMemo(() => {
-    const set = new Set<string>();
-    projects.forEach((p) => {
-      if (p.security_category) set.add(p.security_category);
-    });
-    return Array.from(set);
-  }, [projects]);
+  // Use dynamic filters from database or fallback to initial defaults
+  const activeFiltersList = useMemo(() => {
+    if (projectFilters && projectFilters.length > 0) {
+      return projectFilters.filter((f) => f.is_active);
+    }
+    return DEFAULT_FILTERS;
+  }, [projectFilters]);
 
   const filteredProjects = useMemo(() => {
     return projects.filter((p) => {
-      // Filter by tag/category/track
-      if (activeFilter === 'FEATURED' && !p.featured) return false;
-      if (activeFilter === 'SECURITY' && p.project_type !== 'security') return false;
-      if (activeFilter === 'SOFTWARE' && p.project_type !== 'software') return false;
-      if (activeFilter === 'LAB' && p.project_type !== 'lab') return false;
-      if (
-        !['ALL', 'FEATURED', 'SECURITY', 'SOFTWARE', 'LAB'].includes(activeFilter) &&
-        p.security_category !== activeFilter
-      ) {
-        return false;
+      // 1. Filter by category / status
+      if (activeFilter === 'FEATURED') {
+        if (!p.featured) return false;
+      } else if (activeFilter !== 'ALL') {
+        const targetSlug = activeFilter.toLowerCase();
+        const hasSlug = p.category_slugs && p.category_slugs.map((s) => s.toLowerCase()).includes(targetSlug);
+        const matchesType = p.project_type?.toLowerCase() === targetSlug;
+        const matchesCat = p.security_category?.toLowerCase() === targetSlug;
+        const matchesSoftware = targetSlug === 'software-development' && (p.project_type === 'software' || p.project_type === 'fullstack');
+        const matchesSec = targetSlug === 'security' && (p.project_type === 'security' || p.project_type === 'lab' || p.project_type === 'research');
+
+        if (!hasSlug && !matchesType && !matchesCat && !matchesSoftware && !matchesSec) {
+          return false;
+        }
       }
 
-      // Filter by search query
+      // 2. Filter by search query
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase();
         const matchesTitle = p.title.toLowerCase().includes(q);
@@ -80,35 +89,27 @@ export default function ProjectsSection({ projects }: Props) {
             >
               ★ FEATURED ({projects.filter((p) => p.featured).length})
             </button>
-            <button
-              className={`filter-btn ${activeFilter === 'SECURITY' ? 'filter-btn--active' : ''}`}
-              onClick={() => setActiveFilter('SECURITY')}
-            >
-              [OFFSEC & SEC]
-            </button>
-            <button
-              className={`filter-btn ${activeFilter === 'SOFTWARE' ? 'filter-btn--active' : ''}`}
-              onClick={() => setActiveFilter('SOFTWARE')}
-            >
-              [SOFTWARE DEV]
-            </button>
-            {projects.some(p => p.project_type === 'lab') && (
-              <button
-                className={`filter-btn ${activeFilter === 'LAB' ? 'filter-btn--active' : ''}`}
-                onClick={() => setActiveFilter('LAB')}
-              >
-                [LAB / NETWORK]
-              </button>
-            )}
-            {categories.slice(0, 3).map((cat) => (
-              <button
-                key={cat}
-                className={`filter-btn ${activeFilter === cat ? 'filter-btn--active' : ''}`}
-                onClick={() => setActiveFilter(cat)}
-              >
-                {cat.toUpperCase()}
-              </button>
-            ))}
+            {activeFiltersList.map((filter) => {
+              const targetSlug = filter.slug.toLowerCase();
+              const count = projects.filter((p) => {
+                const hasSlug = p.category_slugs && p.category_slugs.map((s) => s.toLowerCase()).includes(targetSlug);
+                const matchesType = p.project_type?.toLowerCase() === targetSlug;
+                const matchesCat = p.security_category?.toLowerCase() === targetSlug;
+                const matchesSoftware = targetSlug === 'software-development' && (p.project_type === 'software' || p.project_type === 'fullstack');
+                const matchesSec = targetSlug === 'security' && (p.project_type === 'security' || p.project_type === 'lab' || p.project_type === 'research');
+                return hasSlug || matchesType || matchesCat || matchesSoftware || matchesSec;
+              }).length;
+
+              return (
+                <button
+                  key={filter.id || filter.slug}
+                  className={`filter-btn ${activeFilter.toLowerCase() === targetSlug ? 'filter-btn--active' : ''}`}
+                  onClick={() => setActiveFilter(filter.slug.toUpperCase())}
+                >
+                  {filter.name.toUpperCase()} ({count})
+                </button>
+              );
+            })}
           </div>
 
           <div className="projects-search">

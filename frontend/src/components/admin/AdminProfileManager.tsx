@@ -54,6 +54,9 @@ export default function AdminProfileManager() {
         location: profile.location,
         focus_areas: focusAreas,
         currently_doing: currentlyDoing,
+        about_terminal_content: profile.about_terminal_content || '',
+        resume_security_url: profile.resume_security_url || '',
+        resume_software_url: profile.resume_software_url || '',
       };
 
       const updated = await adminUpdateProfile(payload);
@@ -178,11 +181,21 @@ export default function AdminProfileManager() {
 
           <div className="admin-form-field">
             <label>CURRENT DIRECTIVES (COMMA SEPARATED)</label>
-            <textarea
-              rows={3}
+            <input
+              type="text"
               value={doingInput}
-              placeholder="Auditing web applications, Building microservices"
+              placeholder="eJPT certification, Building secure web systems"
               onChange={(e) => setDoingInput(e.target.value)}
+            />
+          </div>
+
+          <div className="admin-form-field">
+            <label>TERMINAL "about.txt" CONTENT (OPTIONAL OVERRIDE)</label>
+            <textarea
+              rows={4}
+              placeholder="Custom text output for 'cat about.txt' in the terminal. Leave blank to auto-generate from profile fields."
+              value={profile.about_terminal_content || ''}
+              onChange={(e) => setProfile({ ...profile, about_terminal_content: e.target.value })}
             />
           </div>
 
@@ -213,16 +226,35 @@ export default function AdminProfileManager() {
             </div>
           </div>
 
+          <div className="admin-form-field" style={{ marginBottom: '12px' }}>
+            <label>CYBERSECURITY CV DIRECT / HOSTED URL</label>
+            <input
+              type="text"
+              placeholder="/resumes/cybersecurity.pdf or https://..."
+              value={profile.resume_security_url || ''}
+              onChange={(e) => setProfile({ ...profile, resume_security_url: e.target.value })}
+            />
+          </div>
+          <div className="admin-form-field" style={{ marginBottom: '16px' }}>
+            <label>SOFTWARE DEV CV DIRECT / HOSTED URL</label>
+            <input
+              type="text"
+              placeholder="/resumes/software-development.pdf or https://..."
+              value={profile.resume_software_url || ''}
+              onChange={(e) => setProfile({ ...profile, resume_software_url: e.target.value })}
+            />
+          </div>
+
           <form onSubmit={handleUploadResume} className="admin-upload-form">
             <div className="admin-form-field">
-              <label>SELECT RESUME TRACK</label>
+              <label>OR UPLOAD CV DOCUMENT FILE</label>
               <select
                 value={resumeTrack}
                 onChange={(e) => setResumeTrack(e.target.value as any)}
                 style={{ padding: '8px', marginBottom: '8px' }}
               >
-                <option value="security">Cybersecurity Resume [eJPT Track]</option>
-                <option value="software">Software Engineering Resume [Dev Track]</option>
+                <option value="security">Cybersecurity Resume</option>
+                <option value="software">Software Engineering Resume</option>
                 <option value="general">General Portfolio Resume</option>
               </select>
             </div>

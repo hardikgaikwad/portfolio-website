@@ -18,6 +18,13 @@
   align-items: start;
 }
 
+/* Left Dossier Column */
+.dossier-column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
 /* Dossier Card */
 .dossier-card {
   background: #fdfbf7;
@@ -54,8 +61,84 @@
 .dossier-id-block {
   display: flex;
   gap: 20px;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
+  align-items: flex-start;
+}
+
+/* Photo Flip Container — Only the HARDIK-G box flips */
+.dossier-photo-flip-container {
+  width: 110px;
+  height: 120px;
+  flex-shrink: 0;
+  perspective: 1000px;
+  cursor: pointer;
+  outline: none;
+  user-select: none;
+  position: relative;
+}
+
+.dossier-photo-flip-container:focus-visible {
+  box-shadow: 0 0 0 2px #38bdf8, 0 0 0 4px rgba(56, 189, 248, 0.3);
+}
+
+.dossier-photo-flipper {
+  display: grid;
+  grid-template-areas: "cardstack";
+  position: relative;
+  width: 110px;
+  height: 120px;
+  transform-style: preserve-3d;
+  transition: transform 0.65s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+.dossier-photo-flip-container:hover .dossier-photo-flipper {
+  transform: translateY(-2px);
+}
+
+.dossier-photo-flip-container.is-flipped .dossier-photo-flipper {
+  transform: rotateY(180deg);
+}
+
+.dossier-photo-flip-container.is-flipped:hover .dossier-photo-flipper {
+  transform: rotateY(180deg) translateY(-2px);
+}
+
+.dossier-photo-front,
+.dossier-photo-back {
+  grid-area: cardstack;
+  width: 110px;
+  height: 120px;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  box-sizing: border-box;
+}
+
+.dossier-photo-front {
+  transform: rotateY(0deg);
+}
+
+.dossier-photo-back {
+  transform: rotateY(180deg);
+  background: #f1ede1;
+  border: 2px solid var(--color-ink, #001f3f);
+  box-shadow: 3px 3px 0px rgba(0, 31, 63, 0.2);
+  display: flex;
   align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+  padding: 6px;
+}
+
+.dossier-photo-back .dossier-avatar-pixel-img {
+  width: 96px;
+  height: 96px;
+  object-fit: contain;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  filter: drop-shadow(1px 2px 0px rgba(0, 31, 63, 0.2));
+  display: block;
 }
 
 .dossier-id-photo-placeholder {
@@ -143,6 +226,26 @@
 .dossier-label {
   font-weight: 700;
   color: #2563eb;
+}
+
+/* Community & Leadership — In Left Dossier Column */
+.community-standalone-block {
+  margin-top: 0;
+  background: #fdfbf7;
+  border: 2px solid var(--color-ink, #001f3f);
+  box-shadow: 5px 5px 0px var(--color-ink, #001f3f);
+  padding: 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.community-standalone-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1.5px solid var(--color-ink, #001f3f);
+  padding-bottom: 8px;
+  margin-bottom: 16px;
 }
 
 .dossier-bio {

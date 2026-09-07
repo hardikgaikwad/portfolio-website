@@ -23,6 +23,34 @@ export interface VolunteeringItem {
   description: string;
 }
 
+export interface Education {
+  id: number;
+  institution: string;
+  degree: string;
+  period: string;
+  grade?: string;
+  location?: string;
+  display_order: number;
+}
+
+export interface Certification {
+  id: number;
+  title: string;
+  issuer?: string;
+  status?: string;
+  description?: string;
+  url?: string;
+  display_order: number;
+}
+
+export interface ProjectCategory {
+  id: number;
+  name: string;
+  slug: string;
+  display_order: number;
+  is_active: boolean;
+}
+
 export interface Profile {
   id: number;
   name: string;
@@ -33,6 +61,7 @@ export interface Profile {
   location: string;
   focus_areas: string[];
   currently_doing: string[];
+  about_terminal_content?: string;
   education?: EducationItem[];
   certifications?: CertificationItem[];
   volunteering?: VolunteeringItem[];
@@ -58,9 +87,14 @@ export interface Project {
   status: 'active' | 'completed' | 'in_progress' | 'archived';
   project_type?: 'security' | 'software' | 'fullstack' | 'research' | 'lab' | 'other';
   security_category?: string;
+  categories?: number[];
+  category_slugs?: string[];
+  category_names?: string[];
   repo_name?: string;
   github_stars?: number;
   is_github_synced?: boolean;
+  terminal_filename?: string;
+  terminal_content?: string;
   role?: string;
   highlights?: string[];
   challenges?: string;

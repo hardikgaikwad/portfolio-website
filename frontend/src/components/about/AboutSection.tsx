@@ -2,6 +2,7 @@
    AboutSection — Operative Dossier & Technical Profile
    ═══════════════════════════════════════════════════════════ */
 
+import { useState } from 'react';
 import type { Profile } from '../../types/api';
 import './AboutSkills.css';
 
@@ -10,10 +11,12 @@ interface Props {
 }
 
 export default function AboutSection({ profile }: Props) {
+  const [isPhotoFlipped, setIsPhotoFlipped] = useState(false);
+
   if (!profile) return null;
 
-  const secResumeUrl = profile.resume_security_url || profile.resume_url || '#';
-  const softResumeUrl = profile.resume_software_url || profile.resume_url || '#';
+  const secResumeUrl = profile.resume_security_url || '/resumes/cybersecurity.pdf';
+  const softResumeUrl = profile.resume_software_url || '/resumes/software-development.pdf';
 
   return (
     <section className="about-section" id="about">
@@ -28,81 +31,127 @@ export default function AboutSection({ profile }: Props) {
         </div>
 
         <div className="about-grid">
-          {/* Left Column: Dossier Card */}
-          <div className="dossier-card">
-            <div className="dossier-card__header">
-              <span className="dossier-card__badge">CLASSIFIED // RECORD #001</span>
-              <span className="dossier-card__loc">LOC: {profile.location.toUpperCase()}</span>
+          {/* Left Column: Dossier Column */}
+          <div className="dossier-column">
+            <div className="dossier-card">
+              <div className="dossier-card__header">
+                <span className="dossier-card__badge">CLASSIFIED // RECORD #001</span>
+                <span className="dossier-card__loc">LOC: {profile.location.toUpperCase()}</span>
+              </div>
+
+              <div className="dossier-card__body">
+                {/* Identity Card: Stationary Info with Flipping HARDIK-G Photo Box */}
+                <div className="dossier-id-block">
+                  <div
+                    className={`dossier-photo-flip-container ${isPhotoFlipped ? 'is-flipped' : ''}`}
+                    onClick={() => setIsPhotoFlipped((prev) => !prev)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        setIsPhotoFlipped((prev) => !prev);
+                      }
+                    }}
+                    tabIndex={0}
+                    role="button"
+                    aria-label="Operative Biometric Photo (Click to flip)"
+                    title="Operative Biometric Photo (Click to flip)"
+                  >
+                    <div className="dossier-photo-flipper">
+                      {/* Front Side: HARDIK-G Box */}
+                      <div className="dossier-photo-front dossier-id-photo-placeholder">
+                        <div className="dossier-id-scanline"></div>
+                        <span className="dossier-id-code">ID: HARDIK-G</span>
+                        <div className="dossier-fingerprint">
+                          <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="2">
+                            <circle cx="50" cy="50" r="15" strokeDasharray="3 3" />
+                            <circle cx="50" cy="50" r="28" strokeDasharray="6 4" />
+                            <circle cx="50" cy="50" r="40" strokeDasharray="8 6" />
+                          </svg>
+                        </div>
+                      </div>
+
+                      {/* Back Side: Pixel-Art Avatar */}
+                      <div className="dossier-photo-back">
+                        <img
+                          src="/images/hardik_avatar_pixel.png"
+                          alt="Hardik Gaikwad Biometric Pixel Avatar"
+                          className="dossier-avatar-pixel-img"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Stationary Details */}
+                  <div className="dossier-id-details">
+                    <h3 className="dossier-name">{profile.name}</h3>
+                    <div className="dossier-role">{profile.title}</div>
+                    <div className="dossier-subrole">{profile.subtitle}</div>
+                    <div className="dossier-email">
+                      <span className="dossier-label">COMM:</span> {profile.email}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Bio summary */}
+                <div className="dossier-bio">
+                  <h4 className="dossier-heading">BACKGROUND DISPATCH</h4>
+                  <p className="dossier-bio-text">{profile.bio}</p>
+                </div>
+
+                {/* Academic & Secondary Education Block */}
+                <div className="dossier-edu-block">
+                  <h4 className="dossier-heading">ACADEMIC FORMATION</h4>
+                  <div className="dossier-edu-item">
+                    <div className="dossier-edu-title">Jabalpur Engineering College (JEC)</div>
+                    <div className="dossier-edu-meta">B.Tech in Information Technology • 2023 – 2027</div>
+                    <div className="dossier-edu-score">CGPA: <strong>7.69</strong> (up to 6th Semester) — Jabalpur, India</div>
+                  </div>
+                  <div className="dossier-edu-item">
+                    <div className="dossier-edu-title">Bal Bhavan School — CBSE</div>
+                    <div className="dossier-edu-meta">Secondary & Higher Secondary Education</div>
+                    <div className="dossier-edu-score">Class XII: <strong>90.8%</strong> | Class X: <strong>90.2%</strong></div>
+                  </div>
+                </div>
+
+                {/* Dual Resume Download Actions */}
+                <div className="dossier-action-group">
+                  <a
+                    href={secResumeUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="dossier-resume-btn dossier-resume-btn--primary"
+                  >
+                    CYBERSECURITY RESUME 🡭
+                  </a>
+                  <a
+                    href={softResumeUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="dossier-resume-btn dossier-resume-btn--secondary"
+                  >
+                    SOFTWARE DEVELOPMENT RESUME 🡭
+                  </a>
+                </div>
+              </div>
             </div>
 
-            <div className="dossier-card__body">
-              <div className="dossier-id-block">
-                <div className="dossier-id-photo-placeholder">
-                  <div className="dossier-id-scanline"></div>
-                  <span className="dossier-id-code">ID: HARDIK-G</span>
-                  <div className="dossier-fingerprint">
-                    <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="2">
-                      <circle cx="50" cy="50" r="15" strokeDasharray="3 3"/>
-                      <circle cx="50" cy="50" r="28" strokeDasharray="6 4"/>
-                      <circle cx="50" cy="50" r="40" strokeDasharray="8 6"/>
-                    </svg>
-                  </div>
-                </div>
-
-                <div className="dossier-id-details">
-                  <h3 className="dossier-name">{profile.name}</h3>
-                  <div className="dossier-role">{profile.title}</div>
-                  <div className="dossier-subrole">{profile.subtitle}</div>
-                  <div className="dossier-email">
-                    <span className="dossier-label">COMM:</span> {profile.email}
-                  </div>
-                </div>
+            {/* Community & Leadership — In Left Dossier Column directly below Classified Record #001 */}
+            <div className="intel-panel community-standalone-block">
+              <div className="intel-panel__header">
+                <h3 className="intel-panel__title">COMMUNITY & LEADERSHIP</h3>
+                <span className="intel-panel__status">VOLUNTEER</span>
               </div>
-
-              {/* Bio summary */}
-              <div className="dossier-bio">
-                <h4 className="dossier-heading">BACKGROUND DISPATCH</h4>
-                <p className="dossier-bio-text">{profile.bio}</p>
-              </div>
-
-              {/* Academic & Secondary Education Block */}
-              <div className="dossier-edu-block">
-                <h4 className="dossier-heading">ACADEMIC FORMATION</h4>
-                <div className="dossier-edu-item">
-                  <div className="dossier-edu-title">Jabalpur Engineering College (JEC)</div>
-                  <div className="dossier-edu-meta">B.Tech in Information Technology • 2023 – 2027</div>
-                  <div className="dossier-edu-score">CGPA: <strong>7.69</strong> (up to 6th Semester) — Jabalpur, India</div>
-                </div>
-                <div className="dossier-edu-item">
-                  <div className="dossier-edu-title">Bal Bhavan School — CBSE</div>
-                  <div className="dossier-edu-meta">Secondary & Higher Secondary Education</div>
-                  <div className="dossier-edu-score">Class XII: <strong>90.8%</strong> | Class X: <strong>90.2%</strong></div>
-                </div>
-              </div>
-
-              {/* Dual Resume Download Actions */}
-              <div className="dossier-action-group">
-                <a
-                  href={secResumeUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="dossier-resume-btn dossier-resume-btn--primary"
-                >
-                  DOWNLOAD CYBERSECURITY CV [eJPT] 🡭
-                </a>
-                <a
-                  href={softResumeUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="dossier-resume-btn dossier-resume-btn--secondary"
-                >
-                  DOWNLOAD SOFTWARE CV [DEV] 🡭
-                </a>
+              <div className="intel-volunteering">
+                <div className="intel-vol-title">VulnCon — Security Conference</div>
+                <div className="intel-vol-role">Core Team Member & Media Team Lead</div>
+                <p className="intel-vol-desc">
+                  Contributed to video editing and media content creation, coordinated event coverage across photographers and videographers, and served as a key point of contact between the Media and Social Media teams.
+                </p>
               </div>
             </div>
           </div>
 
-          {/* Right Column: Intel Panels (Certs, Directives, Vectors, Volunteering) */}
+          {/* Right Column: Intel Panels (Certs, Directives, Vectors) */}
           <div className="intel-panels">
             {/* Certifications Panel */}
             <div className="intel-panel">
@@ -168,21 +217,6 @@ export default function AboutSection({ profile }: Props) {
                 </div>
               </div>
             )}
-
-            {/* Volunteering Panel */}
-            <div className="intel-panel">
-              <div className="intel-panel__header">
-                <h3 className="intel-panel__title">COMMUNITY & LEADERSHIP</h3>
-                <span className="intel-panel__status">VOLUNTEER</span>
-              </div>
-              <div className="intel-volunteering">
-                <div className="intel-vol-title">VulnCon — Security Conference</div>
-                <div className="intel-vol-role">Core Team Member & Media Team Lead</div>
-                <p className="intel-vol-desc">
-                  Contributed to video editing and media content creation, coordinated event coverage across photographers and videographers, and served as a key point of contact between the Media and Social Media teams.
-                </p>
-              </div>
-            </div>
           </div>
         </div>
       </div>

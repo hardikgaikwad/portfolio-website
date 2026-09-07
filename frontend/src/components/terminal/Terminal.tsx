@@ -4,7 +4,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { Profile, Project, SkillCategory, SocialLink } from '../../types/api';
+import type { Profile, Project, SkillCategory, SocialLink, Education, Certification } from '../../types/api';
 import { buildFileSystem } from '../../utils/virtualFileSystem';
 import type { FSNode } from '../../utils/virtualFileSystem';
 import { executeCommand, getCompletions } from '../../utils/commandParser';
@@ -16,6 +16,8 @@ interface Props {
   projects: Project[];
   skills: SkillCategory[];
   social: SocialLink[];
+  education?: Education[];
+  certifications?: Certification[];
 }
 
 interface TerminalLine {
@@ -25,7 +27,7 @@ interface TerminalLine {
   outputs?: CommandOutput[];
 }
 
-export default function Terminal({ profile, projects, skills, social }: Props) {
+export default function Terminal({ profile, projects, skills, social, education, certifications }: Props) {
   const [lines, setLines] = useState<TerminalLine[]>([]);
   const [currentInput, setCurrentInput] = useState('');
   const [currentPath, setCurrentPath] = useState<string[]>([]);
@@ -39,8 +41,8 @@ export default function Terminal({ profile, projects, skills, social }: Props) {
 
   // Build filesystem when data changes
   useEffect(() => {
-    setFs(buildFileSystem(profile, projects, skills, social));
-  }, [profile, projects, skills, social]);
+    setFs(buildFileSystem(profile, projects, social, education, certifications));
+  }, [profile, projects, social, education, certifications]);
 
   // Auto-scroll to bottom
   useEffect(() => {
@@ -76,7 +78,7 @@ export default function Terminal({ profile, projects, skills, social }: Props) {
       // Execute command
       const result = executeCommand(
         input, currentPath, fs, profile, projects, social,
-        commandHistory, navigate
+        commandHistory, education, certifications, skills, navigate
       );
 
       if (result.clear) {
@@ -91,7 +93,7 @@ export default function Terminal({ profile, projects, skills, social }: Props) {
     }
 
     setCurrentInput('');
-  }, [currentInput, currentPath, fs, profile, projects, social, commandHistory, getPrompt, navigate]);
+  }, [currentInput, currentPath, fs, profile, projects, social, commandHistory, education, certifications, skills, getPrompt, navigate]);
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
     switch (e.key) {
@@ -222,7 +224,6 @@ export default function Terminal({ profile, projects, skills, social }: Props) {
                 value={currentInput}
                 onChange={(e) => setCurrentInput(e.target.value)}
                 onKeyDown={handleKeyDown}
-                autoFocus
                 spellCheck={false}
                 autoComplete="off"
                 aria-label="Terminal input"

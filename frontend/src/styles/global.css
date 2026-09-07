@@ -193,7 +193,8 @@ ul, ol {
 .pixel-corner-c,
 .project-card:nth-child(5n + 3),
 .skill-category-card:nth-child(4n + 3),
-.intel-panel:nth-child(even) {
+.intel-panel:nth-child(even),
+.community-standalone-block {
   clip-path: polygon(
     0 0, 100% 0, 100% 100%,
     10px 100%, 10px calc(100% - 5px), 5px calc(100% - 5px), 5px calc(100% - 10px), 0 calc(100% - 10px)

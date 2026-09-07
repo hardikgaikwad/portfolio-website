@@ -1,6 +1,7 @@
 /* ═══════════════════════════════════════════════════════════
    GraffitiLayer.tsx — Physical Hand-Sprayed Graffiti & Doodles
    Rendered in the continuous document space down the graph paper
+   Supports Multi-Style Catalog: Stencil, Bubbly, Incomplete, Doodles
    ═══════════════════════════════════════════════════════════ */
 
 import React from 'react';
@@ -27,6 +28,25 @@ function renderDoodleSVG(type: DoodleType) {
         </svg>
       );
 
+    case 'crossed-eye':
+      return (
+        <svg className="graffiti-doodle-svg" width="58" height="48" viewBox="0 0 58 48">
+          <path
+            d="M 5 24 Q 29 6 53 24 Q 29 42 5 24 Z"
+            fill="none"
+            strokeWidth="3.2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          {/* X eye pupil */}
+          <line x1="23" y1="18" x2="35" y2="30" strokeWidth="3" strokeLinecap="round" />
+          <line x1="35" y1="18" x2="23" y2="30" strokeWidth="3" strokeLinecap="round" />
+          <line x1="18" y1="8" x2="15" y2="3" strokeWidth="2.2" strokeLinecap="round" />
+          <line x1="29" y1="6" x2="29" y2="2" strokeWidth="2.2" strokeLinecap="round" />
+          <line x1="40" y1="8" x2="43" y2="3" strokeWidth="2.2" strokeLinecap="round" />
+        </svg>
+      );
+
     case 'explosion':
       return (
         <svg className="graffiti-doodle-svg" width="56" height="54" viewBox="0 0 52 50">
@@ -38,6 +58,20 @@ function renderDoodleSVG(type: DoodleType) {
             fill="none"
           />
           <circle cx="26" cy="25" r="3" />
+        </svg>
+      );
+
+    case 'explosion-small':
+      return (
+        <svg className="graffiti-doodle-svg" width="40" height="40" viewBox="0 0 40 40">
+          <path
+            d="M 20 3 L 24 13 L 35 9 L 28 19 L 37 27 L 25 27 L 23 37 L 17 29 L 5 33 L 11 22 L 3 16 L 14 14 Z"
+            strokeWidth="2.4"
+            strokeLinejoin="round"
+            strokeLinecap="round"
+            fill="none"
+          />
+          <circle cx="20" cy="20" r="2.5" />
         </svg>
       );
 
@@ -113,6 +147,27 @@ function renderDoodleSVG(type: DoodleType) {
             strokeLinejoin="round"
             fill="none"
           />
+        </svg>
+      );
+
+    case 'bubbly-arrow':
+      return (
+        <svg className="graffiti-doodle-svg" width="52" height="46" viewBox="0 0 52 46">
+          <path
+            d="M 9 38 C 10 22 24 16 38 15"
+            strokeWidth="4.2"
+            strokeLinecap="round"
+            fill="none"
+          />
+          <path
+            d="M 28 7 C 35 11 42 13 47 15 C 42 18 36 22 29 26"
+            strokeWidth="4.2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            fill="none"
+          />
+          {/* Little energy halo */}
+          <circle cx="10" cy="10" r="2.2" opacity="0.8" />
         </svg>
       );
 
@@ -235,6 +290,128 @@ function renderDoodleSVG(type: DoodleType) {
         </svg>
       );
 
+    case 'bubbly-pwn':
+      return (
+        <svg className="graffiti-doodle-svg" width="80" height="38" viewBox="0 0 80 38">
+          <g strokeWidth="4.2" strokeLinecap="round" strokeLinejoin="round" fill="none">
+            {/* P */}
+            <path d="M 8 9 L 8 30 M 8 9 C 23 7 23 20 8 20" />
+            {/* W */}
+            <path d="M 27 10 L 31 29 L 37 15 L 43 29 L 47 10" />
+            {/* N */}
+            <path d="M 56 30 L 56 9 L 71 30 L 71 9" />
+          </g>
+          <circle cx="13" cy="13" r="1.5" />
+          <circle cx="60" cy="13" r="1.5" />
+        </svg>
+      );
+
+    case 'bubbly-cloud':
+      return (
+        <svg className="graffiti-doodle-svg" width="56" height="42" viewBox="0 0 56 42">
+          <path
+            d="M 12 28 C 6 28 4 20 10 16 C 8 8 18 5 25 9 C 30 3 42 5 44 13 C 51 13 53 23 47 28 C 43 30 14 30 12 28 Z"
+            strokeWidth="3.4"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            fill="none"
+          />
+          {/* Cloud drip drops */}
+          <path d="M 21 33 L 21 38" strokeWidth="2.8" strokeLinecap="round" />
+          <path d="M 35 32 L 35 37" strokeWidth="2.8" strokeLinecap="round" />
+          <circle cx="16" cy="16" r="1.8" />
+        </svg>
+      );
+
+    case 'quirky-smiley':
+      return (
+        <svg className="graffiti-doodle-svg" width="46" height="46" viewBox="0 0 46 46">
+          <circle cx="23" cy="23" r="18" strokeWidth="3" strokeLinecap="round" fill="none" />
+          {/* Left round eye */}
+          <circle cx="16" cy="18" r="2.8" />
+          {/* Right angled eye */}
+          <line x1="26" y1="16" x2="32" y2="20" strokeWidth="2.8" strokeLinecap="round" />
+          {/* Smirk */}
+          <path d="M 14 28 Q 23 37 32 26" strokeWidth="2.8" strokeLinecap="round" fill="none" />
+        </svg>
+      );
+
+    case 'dead-smiley':
+      return (
+        <svg className="graffiti-doodle-svg" width="46" height="46" viewBox="0 0 46 46">
+          <circle cx="23" cy="23" r="18" strokeWidth="3" strokeLinecap="round" fill="none" />
+          {/* Left X eye */}
+          <line x1="13" y1="15" x2="19" y2="21" strokeWidth="2.6" strokeLinecap="round" />
+          <line x1="19" y1="15" x2="13" y2="21" strokeWidth="2.6" strokeLinecap="round" />
+          {/* Right X eye */}
+          <line x1="27" y1="15" x2="33" y2="21" strokeWidth="2.6" strokeLinecap="round" />
+          <line x1="33" y1="15" x2="27" y2="21" strokeWidth="2.6" strokeLinecap="round" />
+          {/* Stitched mouth */}
+          <path d="M 14 30 Q 23 27 32 30" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+          <line x1="19" y1="28" x2="19" y2="32" strokeWidth="2" strokeLinecap="round" />
+          <line x1="27" y1="28" x2="27" y2="32" strokeWidth="2" strokeLinecap="round" />
+        </svg>
+      );
+
+    case 'question-mark':
+      return (
+        <svg className="graffiti-doodle-svg" width="34" height="46" viewBox="0 0 34 46">
+          <path
+            d="M 8 13 C 8 4 26 4 26 14 C 26 21 17 21 17 28"
+            strokeWidth="3.6"
+            strokeLinecap="round"
+            fill="none"
+          />
+          <circle cx="17" cy="37" r="3.2" />
+        </svg>
+      );
+
+    case 'exclamation-mark':
+      return (
+        <svg className="graffiti-doodle-svg" width="28" height="46" viewBox="0 0 28 46">
+          <path d="M 14 6 L 14 27" strokeWidth="4.2" strokeLinecap="round" />
+          <circle cx="14" cy="37" r="3.4" />
+        </svg>
+      );
+
+    case 'rough-heart':
+      return (
+        <svg className="graffiti-doodle-svg" width="44" height="42" viewBox="0 0 44 42">
+          <path
+            d="M 22 36 C 6 24 2 12 12 6 C 18 2 21 8 22 12 C 23 8 26 2 32 6 C 42 12 38 24 22 36 Z"
+            strokeWidth="3.2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            fill="none"
+          />
+        </svg>
+      );
+
+    case 'mini-star':
+      return (
+        <svg className="graffiti-doodle-svg" width="38" height="38" viewBox="0 0 38 38">
+          <path
+            d="M 19 4 L 23 14 L 34 14 L 25 21 L 28 32 L 19 25 L 10 32 L 13 21 L 4 14 L 15 14 Z"
+            strokeWidth="2.4"
+            strokeLinejoin="round"
+            strokeLinecap="round"
+            fill="none"
+          />
+        </svg>
+      );
+
+    case 'wavy-loop':
+      return (
+        <svg className="graffiti-doodle-svg" width="52" height="34" viewBox="0 0 52 34">
+          <path
+            d="M 5 24 C 12 28 16 9 26 12 C 34 14 36 28 47 20"
+            strokeWidth="3.6"
+            strokeLinecap="round"
+            fill="none"
+          />
+        </svg>
+      );
+
     default:
       return null;
   }
@@ -258,25 +435,27 @@ export default function GraffitiLayer() {
         const colorClass = `graffiti--${item.color}`;
         const sprayClass = item.sprayEffect ? 'graffiti--spray' : '';
         const mobileClass = item.hideOnMobile ? 'graffiti-item--mobile-hide' : '';
+        const variantClass = item.styleVariant ? `graffiti-item--${item.styleVariant}` : '';
 
         const style: React.CSSProperties = {
           top: `${item.topPercent}%`,
           opacity: item.opacity,
           transform: `rotate(${item.rotationDeg}deg) scale(${item.scale})`,
+          [item.side === 'left' ? 'left' : 'right']: `${item.marginOffsetPx}px`,
         };
 
         return (
           <div
             key={item.id}
-            className={`graffiti-item ${sideClass} ${colorClass} ${sprayClass} ${mobileClass}`}
+            className={`graffiti-item ${sideClass} ${colorClass} ${sprayClass} ${variantClass} ${mobileClass}`}
             style={style}
           >
             {/* Combo or Doodle */}
             {item.doodle && renderDoodleSVG(item.doodle)}
 
-            {/* Word Content */}
+            {/* Word Content with Variant Stencil / Bubbly / Incomplete */}
             {item.text && (
-              <span className="graffiti-word">
+              <span className={`graffiti-word ${item.styleVariant ? `graffiti-word--${item.styleVariant}` : ''}`}>
                 {item.text}
               </span>
             )}

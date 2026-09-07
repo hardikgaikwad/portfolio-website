@@ -3,7 +3,7 @@
    ═══════════════════════════════════════════════════════════ */
 
 import axios from 'axios';
-import type { Profile, Project, SkillCategory, SocialLink, SiteSettings, AuthTokens } from '../types/api';
+import type { Profile, Project, ProjectCategory, SkillCategory, SocialLink, SiteSettings, AuthTokens, Education, Certification } from '../types/api';
 
 const API_BASE = import.meta.env.VITE_API_URL || '';
 
@@ -62,6 +62,15 @@ export const fetchSkills = () =>
 
 export const fetchSocial = () =>
   api.get<SocialLink[]>('/social/').then(r => r.data);
+
+export const fetchEducation = () =>
+  api.get<Education[]>('/education/').then(r => r.data);
+
+export const fetchCertifications = () =>
+  api.get<Certification[]>('/certifications/').then(r => r.data);
+
+export const fetchProjectFilters = () =>
+  api.get<ProjectCategory[]>('/project-filters/').then(r => r.data);
 
 export const fetchSiteSettings = () =>
   api.get<SiteSettings>('/site-settings/').then(r => r.data);

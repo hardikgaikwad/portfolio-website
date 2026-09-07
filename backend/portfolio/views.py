@@ -4,20 +4,67 @@ Public API views for the portfolio.
 These endpoints are read-only and accessible without authentication.
 """
 
+from django.shortcuts import redirect
+from django.http import Http404
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 
-from .models import Profile, Project, SkillCategory, SocialLink, SiteSettings
+from .models import (
+    Profile, Project, ProjectCategory, SkillCategory, SocialLink,
+    SiteSettings, Education, Certification
+)
 from .serializers import (
     ProfileSerializer,
     ProjectListSerializer,
     ProjectDetailSerializer,
+    ProjectCategorySerializer,
     SkillCategorySerializer,
     SocialLinkSerializer,
     SiteSettingsSerializer,
+    EducationSerializer,
+    CertificationSerializer,
 )
+
+
+class ProjectCategoryListView(generics.ListAPIView):
+    """
+    GET /api/project-filters/
+    Returns active project categories/filters ordered by display_order.
+    """
+    permission_classes = [AllowAny]
+    serializer_class = ProjectCategorySerializer
+
+    def get_queryset(self):
+        return ProjectCategory.objects.filter(is_active=True)
+
+
+class ResumeDownloadView(APIView):
+    """
+    GET /api/resumes/<track>/
+    Direct accessible endpoint that redirects to the active resume resource.
+    """
+    permission_classes = [AllowAny]
+
+    def get(self, request, track):
+        profile = Profile.objects.first()
+        if not profile:
+            raise Http404("Profile not found")
+
+        track_lower = track.lower()
+        if 'sec' in track_lower:
+            url = profile.resume_security_url or '/resumes/cybersecurity.pdf'
+            if profile.resume_security:
+                url = request.build_absolute_uri(profile.resume_security.url)
+        elif 'soft' in track_lower or 'dev' in track_lower:
+            url = profile.resume_software_url or '/resumes/software-development.pdf'
+            if profile.resume_software:
+                url = request.build_absolute_uri(profile.resume_software.url)
+        else:
+            url = profile.resume_security_url or '/resumes/cybersecurity.pdf'
+
+        return redirect(url)
 
 
 class ProfileView(APIView):
@@ -100,3 +147,23 @@ class SiteSettingsView(APIView):
             )
         serializer = SiteSettingsSerializer(settings_obj)
         return Response(serializer.data)
+
+
+class EducationListView(generics.ListAPIView):
+    """
+    GET /api/education/
+    Returns all education records, ordered by display_order.
+    """
+    permission_classes = [AllowAny]
+    serializer_class = EducationSerializer
+    queryset = Education.objects.all()
+
+
+class CertificationListView(generics.ListAPIView):
+    """
+    GET /api/certifications/
+    Returns all certification records, ordered by display_order.
+    """
+    permission_classes = [AllowAny]
+    serializer_class = CertificationSerializer
+    queryset = Certification.objects.all()

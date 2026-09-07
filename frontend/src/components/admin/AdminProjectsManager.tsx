@@ -3,17 +3,20 @@
    ═══════════════════════════════════════════════════════════ */
 
 import { useState, useEffect } from 'react';
-import type { Project } from '../../types/api';
+import type { Project, ProjectCategory } from '../../types/api';
 import {
   adminFetchProjects,
   adminCreateProject,
   adminUpdateProject,
   adminDeleteProject,
   adminSyncGitHub,
+  fetchProjectFilters,
 } from '../../services/api';
 
 export default function AdminProjectsManager() {
   const [projects, setProjects] = useState<Project[]>([]);
+  const [categoriesList, setCategoriesList] = useState<ProjectCategory[]>([]);
+  const [selectedCatIds, setSelectedCatIds] = useState<number[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingProject, setEditingProject] = useState<Partial<Project> | null>(null);
   const [techInput, setTechInput] = useState('');
@@ -46,6 +49,7 @@ export default function AdminProjectsManager() {
 
   useEffect(() => {
     loadProjects();
+    fetchProjectFilters().then(setCategoriesList).catch(() => {});
   }, []);
 
   const handleStartCreate = () => {
@@ -63,11 +67,20 @@ export default function AdminProjectsManager() {
       display_order: projects.length + 1,
     });
     setTechInput('');
+    setSelectedCatIds([]);
   };
 
   const handleStartEdit = (p: Project) => {
     setEditingProject({ ...p });
     setTechInput(p.technologies ? p.technologies.join(', ') : '');
+
+    let catIds: number[] = [];
+    if (Array.isArray(p.categories) && p.categories.length > 0 && typeof p.categories[0] === 'number') {
+      catIds = p.categories as number[];
+    } else if (p.category_slugs && categoriesList.length > 0) {
+      catIds = categoriesList.filter((c) => p.category_slugs?.includes(c.slug)).map((c) => c.id);
+    }
+    setSelectedCatIds(catIds);
   };
 
   const handleDelete = async (id: number) => {
@@ -98,9 +111,21 @@ export default function AdminProjectsManager() {
       formData.append('security_category', editingProject.security_category || '');
       formData.append('display_order', String(editingProject.display_order || 0));
 
+      // Append selected categories
+      selectedCatIds.forEach((id) => {
+        formData.append('categories', String(id));
+      });
+
       // Parse technologies from CSV
       const techs = techInput.split(',').map((t) => t.trim()).filter(Boolean);
       formData.append('technologies', JSON.stringify(techs));
+
+      if (editingProject.terminal_filename !== undefined) {
+        formData.append('terminal_filename', editingProject.terminal_filename || '');
+      }
+      if (editingProject.terminal_content !== undefined) {
+        formData.append('terminal_content', editingProject.terminal_content || '');
+      }
 
       if (editingProject.id) {
         await adminUpdateProject(editingProject.id, formData);
@@ -262,6 +287,52 @@ export default function AdminProjectsManager() {
               />
             </div>
 
+            {categoriesList.length > 0 && (
+              <div className="admin-form-field">
+                <label>FILTER CATEGORIES (ACTIVE OPERATIONAL DOMAINS)</label>
+                <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', marginTop: '6px' }}>
+                  {categoriesList.map((cat) => (
+                    <label key={cat.id} style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', fontSize: '0.85rem' }}>
+                      <input
+                        type="checkbox"
+                        checked={selectedCatIds.includes(cat.id)}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setSelectedCatIds([...selectedCatIds, cat.id]);
+                          } else {
+                            setSelectedCatIds(selectedCatIds.filter((id) => id !== cat.id));
+                          }
+                        }}
+                      />
+                      {cat.name.toUpperCase()}
+                    </label>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div className="admin-form-row">
+              <div className="admin-form-field">
+                <label>TERMINAL VIRTUAL FILENAME</label>
+                <input
+                  type="text"
+                  placeholder="e.g. privshare.txt (leave blank to auto-generate)"
+                  value={editingProject.terminal_filename || ''}
+                  onChange={(e) => setEditingProject({ ...editingProject, terminal_filename: e.target.value })}
+                />
+              </div>
+            </div>
+
+            <div className="admin-form-field">
+              <label>TERMINAL CONTENT (OPTIONAL OVERRIDE FOR "cat projects/&lt;filename&gt;")</label>
+              <textarea
+                rows={4}
+                placeholder="Custom text output when viewed in the terminal. Leave blank to auto-generate from project fields."
+                value={editingProject.terminal_content || ''}
+                onChange={(e) => setEditingProject({ ...editingProject, terminal_content: e.target.value })}
+              />
+            </div>
+
             <div className="admin-form-field admin-form-checkbox">
               <label>
                 <input
@@ -306,7 +377,11 @@ export default function AdminProjectsManager() {
                 <tr key={p.id}>
                   <td>#{p.id}</td>
                   <td className="admin-table-title">{p.title}</td>
-                  <td>{p.security_category || '—'}</td>
+                  <td>
+                    {p.category_names && p.category_names.length > 0
+                      ? p.category_names.join(', ')
+                      : p.security_category || '—'}
+                  </td>
                   <td>
                     <span className="admin-table-badge">{p.status.toUpperCase()}</span>
                   </td>

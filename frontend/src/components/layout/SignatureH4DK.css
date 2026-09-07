@@ -1,0 +1,73 @@
+/* ═══════════════════════════════════════════════════════════
+   SignatureH4DK.css — Hand-Sprayed "H4DK" Signature Tag
+   Embedded in the continuous graph-paper page world
+   Bottom-right placement just above the footer
+   ═══════════════════════════════════════════════════════════ */
+
+.signature-h4dk-container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 var(--space-xl);
+  display: flex;
+  justify-content: flex-end;
+  pointer-events: none;
+  position: relative;
+  z-index: 2;
+}
+
+.signature-h4dk {
+  width: 100%;
+  max-width: clamp(320px, 28vw, 440px);
+  margin-top: calc(var(--space-xl) * -0.5);
+  margin-bottom: var(--space-2xl);
+  margin-right: clamp(10px, 2vw, 40px);
+  user-select: none;
+  pointer-events: auto;
+  cursor: default;
+  filter: drop-shadow(2px 3px 0px rgba(239, 233, 215, 0.65));
+  transform: rotate(-2deg);
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.signature-h4dk:hover {
+  transform: rotate(0deg) scale(1.03);
+}
+
+.signature-h4dk__img {
+  width: 100%;
+  height: auto;
+  display: block;
+  pointer-events: none;
+  image-rendering: auto;
+}
+
+/* Responsive scaling */
+@media (max-width: 1024px) {
+  .signature-h4dk {
+    max-width: clamp(280px, 34vw, 360px);
+    margin-right: var(--space-md);
+    margin-bottom: var(--space-xl);
+  }
+}
+
+@media (max-width: 768px) {
+  .signature-h4dk-container {
+    justify-content: flex-end;
+    padding: 0 var(--space-md);
+  }
+
+  .signature-h4dk {
+    max-width: 280px;
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: var(--space-xl);
+    transform: rotate(-1deg);
+  }
+}
+
+@media (max-width: 480px) {
+  .signature-h4dk {
+    max-width: 230px;
+  }
+}

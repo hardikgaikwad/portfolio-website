@@ -14,6 +14,10 @@ urlpatterns = [
     path('projects/<slug:slug>/', views.ProjectDetailView.as_view(), name='project-detail'),
     path('skills/', views.SkillListView.as_view(), name='skill-list'),
     path('social/', views.SocialLinkListView.as_view(), name='social-list'),
+    path('education/', views.EducationListView.as_view(), name='education-list'),
+    path('certifications/', views.CertificationListView.as_view(), name='certification-list'),
+    path('project-filters/', views.ProjectCategoryListView.as_view(), name='project-filter-list'),
+    path('resumes/<str:track>/', views.ResumeDownloadView.as_view(), name='resume-download'),
     path('site-settings/', views.SiteSettingsView.as_view(), name='site-settings'),
 
     # ── Admin API ───────────────────────────────────────────
