@@ -108,7 +108,9 @@
 
 .dossier-name {
   font-family: var(--font-display, serif);
-  font-size: 1.8rem;
+  font-size: 1.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: var(--color-ink, #001f3f);
   margin: 0 0 4px 0;
 }
@@ -181,8 +183,11 @@
 }
 
 .dossier-edu-title {
-  font-family: var(--font-display, serif);
-  font-size: 1.05rem;
+  font-family: var(--font-condensed, var(--font-body));
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
   color: var(--color-ink, #001f3f);
   margin-bottom: 2px;
 }
@@ -291,8 +296,11 @@
 }
 
 .intel-vol-title {
-  font-family: var(--font-display, serif);
-  font-size: 1.15rem;
+  font-family: var(--font-condensed, var(--font-body));
+  font-size: 1.1rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
   color: var(--color-ink, #001f3f);
   margin-bottom: 2px;
 }
@@ -464,7 +472,10 @@
 
 .skill-category-name {
   font-family: var(--font-display, serif);
-  font-size: 1.25rem;
+  font-size: 1.2rem;
+  letter-spacing: 0.06em;
+  line-height: 1.2;
+  text-transform: uppercase;
   color: var(--color-ink, #001f3f);
   margin: 0;
 }

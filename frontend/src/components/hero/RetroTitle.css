@@ -18,39 +18,47 @@
 .retro-title__outline,
 .retro-title__fill,
 .retro-title__texture {
-  font-family: var(--font-display, 'Thugolatz', 'Syne', 'Archivo Black', Impact, sans-serif);
-  font-size: 110px;
-  font-weight: 900;
-  letter-spacing: 0.04em;
+  font-family: var(--font-display, 'Thugolatz', 'thugolatz', 'Syne', 'Archivo Black', Impact, sans-serif);
+  font-size: 96px;
+  font-weight: normal;
+  letter-spacing: 0.10em;
   text-transform: uppercase;
+  dominant-baseline: central;
+  text-anchor: middle;
 }
 
-/* Shadow — dark navy offset */
+/* Shadow — dark navy retro offset */
 .retro-title__shadow {
-  fill: #0E1B2A;
-  opacity: 0.75;
+  fill: #0B1929;
+  opacity: 0.85;
 }
 
-/* Outline — navy stroke behind fill */
+/* Outline — navy contour behind fill */
 .retro-title__outline {
   fill: none;
   stroke: #183F68;
-  stroke-width: 13px;
+  stroke-width: 6px;
+  stroke-linejoin: round;
+  stroke-linecap: round;
   paint-order: stroke;
 }
 
-/* Main fill — orange/golden gradient */
+/* Main fill — vibrant orange/golden poster gradient */
 .retro-title__fill {
   fill: url(#retroGradient);
-  stroke: #183F68;
-  stroke-width: 4px;
-  paint-order: stroke;
+  stroke: none;
+}
+.retro-title__fill--line1 {
+  fill: url(#retroGradient1);
+}
+.retro-title__fill--line2 {
+  fill: url(#retroGradient2);
 }
 
-/* Texture overlay — horizontal lines */
+/* Texture overlay — subtle horizontal lines */
 .retro-title__texture {
   fill: url(#retroLines);
-  opacity: 0.45;
+  opacity: 0.28;
   pointer-events: none;
 }
 
@@ -60,8 +68,11 @@
   .retro-title__outline,
   .retro-title__fill,
   .retro-title__texture {
-    font-size: 85px;
-    letter-spacing: 0.02em;
+    font-size: 78px;
+    letter-spacing: 0.08em;
+  }
+  .retro-title__outline {
+    stroke-width: 5px;
   }
 }
 
@@ -70,6 +81,10 @@
   .retro-title__outline,
   .retro-title__fill,
   .retro-title__texture {
-    font-size: 68px;
+    font-size: 60px;
+    letter-spacing: 0.06em;
+  }
+  .retro-title__outline {
+    stroke-width: 4px;
   }
 }
