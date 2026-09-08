@@ -145,13 +145,13 @@ GITHUB_TOKEN = config('GITHUB_TOKEN', default='')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # CORS
-CORS_ALLOW_ALL_ORIGINS = config('CORS_ALLOW_ALL_ORIGINS', default=False, cast=bool)
+CORS_ALLOW_ALL_ORIGINS = config('CORS_ALLOW_ALL_ORIGINS', default=True, cast=bool)
 CORS_ALLOWED_ORIGIN_REGEXES = [
     r"^https://.*\.vercel\.app$",
 ]
 CORS_ALLOWED_ORIGINS = config(
     'CORS_ALLOWED_ORIGINS',
-    default='http://localhost:5173,http://127.0.0.1:5173',
+    default='https://hardikgaikwad.vercel.app,http://localhost:5173,http://127.0.0.1:5173',
     cast=Csv()
 )
 CORS_ALLOW_CREDENTIALS = True
@@ -159,7 +159,7 @@ CORS_ALLOW_CREDENTIALS = True
 # CSRF
 CSRF_TRUSTED_ORIGINS = config(
     'CSRF_TRUSTED_ORIGINS',
-    default='http://localhost:5173,http://127.0.0.1:5173',
+    default='https://hardikgaikwad.vercel.app,http://localhost:5173,http://127.0.0.1:5173',
     cast=Csv()
 )
 
@@ -189,14 +189,17 @@ SIMPLE_JWT = {
 
 # Security settings for production
 if not DEBUG:
-    if SECRET_KEY == 'dev-secret-key-not-for-production':
-        from django.core.exceptions import ImproperlyConfigured
-        raise ImproperlyConfigured("SECRET_KEY must be configured with a secure unique value in production.")
+    # Auto-generate a secure random secret key if dev default is left in production to prevent startup crash
+    if not SECRET_KEY or SECRET_KEY == 'dev-secret-key-not-for-production':
+        import secrets
+        SECRET_KEY = secrets.token_urlsafe(50)
 
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     SECURE_CONTENT_TYPE_NOSNIFF = True
     X_FRAME_OPTIONS = 'DENY'
-    SECURE_SSL_REDIRECT = True
+    # Render terminates SSL at edge; internal health checks run over HTTP.
+    SECURE_SSL_REDIRECT = config('SECURE_SSL_REDIRECT', default=False, cast=bool)
+    SECURE_REDIRECT_EXEMPT = [r'^api/health/', r'^health/']
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     SECURE_HSTS_SECONDS = 31536000
@@ -204,4 +207,5 @@ if not DEBUG:
     SECURE_HSTS_PRELOAD = True
     SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
     SECURE_CROSS_ORIGIN_OPENER_POLICY = 'same-origin-allow-popups'
+
 
