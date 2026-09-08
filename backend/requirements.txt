@@ -23,6 +23,3 @@ python-decouple==3.8
 # Database
 psycopg2-binary==2.9.11
 dj-database-url==2.3.0
-
-# Cloud Media Storage (Optional / Production)
-django-cloudinary-storage==0.3.0
