@@ -27,7 +27,7 @@
 }
 
 :root {
-  /* ── Color Palette ──────────────────────────────────────── */
+  /* ── Color Palette (Light Mode Defaults) ─────────────────── */
   --color-navy-primary: #183F68;
   --color-navy-secondary: #234D73;
   --color-navy-deep: #0E2A47;
@@ -53,6 +53,26 @@
   --color-error: #C0392B;
   --color-success: #27AE60;
   --color-info: #2980B9;
+
+  /* ── Semantic Design Tokens ──────────────────────────────── */
+  --color-card-bg: #FDFBF7;
+  --color-card-subtle: #F1EDE1;
+  --color-card-border: var(--color-ink, #001F3F);
+  --color-ink: #001F3F;
+  --color-ink-bg: #001F3F;
+  --color-ink-text: #FFFFFF;
+  --color-ink-light: #2D3748;
+  --color-ink-muted: #64748B;
+  --color-bg-alt: #E8E2CF;
+  --shadow-offset-color: var(--color-navy-primary);
+  --shadow-card-color: var(--color-ink, #001F3F);
+  --color-title-shadow: #102B47;
+  --color-title-shadow-deep: #0B1929;
+  --color-title-outline: #183F68;
+  --color-signature-shadow: rgba(239, 233, 215, 0.65);
+  --color-graffiti-shadow: rgba(239, 233, 215, 0.6);
+  --color-graffiti-navy: #183F68;
+  --color-graffiti-charcoal: #2E3E4E;
 
   /* Terminal colors */
   --color-term-bg: #0E1B2A;
@@ -100,17 +120,18 @@
   --nav-height: 60px;
 
   /* ── Borders & Shadows ──────────────────────────────────── */
-  --border-thin: 1px solid var(--color-navy-primary);
-  --border-medium: 2px solid var(--color-navy-primary);
+  --border-thin: 1px solid var(--color-ink);
+  --border-medium: 2px solid var(--color-ink);
   --border-accent: 2px solid var(--color-orange);
-  --shadow-offset: 4px 4px 0 var(--color-navy-primary);
-  --shadow-offset-sm: 2px 2px 0 var(--color-navy-primary);
-  --shadow-offset-lg: 6px 6px 0 var(--color-navy-primary);
+  --shadow-offset: 4px 4px 0 var(--shadow-offset-color);
+  --shadow-offset-sm: 2px 2px 0 var(--shadow-offset-color);
+  --shadow-offset-lg: 6px 6px 0 var(--shadow-offset-color);
 
   /* ── Transitions ────────────────────────────────────────── */
   --transition-fast: 150ms ease;
   --transition-base: 250ms ease;
   --transition-slow: 400ms ease;
+  --theme-transition: background-color 300ms ease, color 300ms ease, border-color 300ms ease, box-shadow 300ms ease;
 
   /* ── Z-index ────────────────────────────────────────────── */
   --z-background: -1;
@@ -118,6 +139,60 @@
   --z-nav: 100;
   --z-modal: 200;
   --z-tooltip: 300;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   DARK THEME PALETTE
+   Deliberate classified archival document viewed in low light
+   ═══════════════════════════════════════════════════════════ */
+[data-theme="dark"] {
+  --color-paper: #111417;
+  --color-paper-dark: #161A1E;
+  --color-paper-light: #1A2026;
+  --color-paper-grid: #222A34;
+
+  --color-card-bg: #161A20;
+  --color-card-subtle: #1E232B;
+  --color-card-border: #2E4C70;
+  --color-ink: #2E4C70;
+  --color-ink-bg: #1A2533;
+  --color-ink-text: #EDE8DC;
+  --color-ink-light: #CBD5E1;
+  --color-ink-muted: #7E8F9F;
+  --color-bg-alt: #13171C;
+
+  --color-dark: #EDE8DC;
+  --color-dark-muted: #94A3B8;
+
+  --color-cream: #1E232B;
+
+  --color-navy-primary: #3B6B9B;
+  --color-navy-secondary: #2F5882;
+  --color-navy-deep: #0D1C2D;
+  --color-navy-light: #4D7FA9;
+
+  --color-orange: #E0732E;
+  --color-orange-light: #EB8848;
+  --color-orange-dark: #C45E20;
+
+  --color-golden: #E0B23A;
+  --color-golden-light: #ECC24E;
+  --color-golden-dark: #C49826;
+
+  --shadow-offset-color: rgba(0, 0, 0, 0.65);
+  --shadow-card-color: rgba(0, 0, 0, 0.65);
+
+  --color-title-shadow: #050B12;
+  --color-title-shadow-deep: #020508;
+  --color-title-outline: #2E5884;
+
+  --color-signature-shadow: rgba(0, 0, 0, 0.6);
+  --color-graffiti-shadow: rgba(0, 0, 0, 0.5);
+  --color-graffiti-navy: #3E6E9E;
+  --color-graffiti-charcoal: #6C7D8E;
+
+  --color-term-bg: #0D1015;
+  --color-term-border: #2E4C70;
 }
 
 /* Reduced motion */

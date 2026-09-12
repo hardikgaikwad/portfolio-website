@@ -24,7 +24,7 @@
   justify-content: center;
   pointer-events: none;
   user-select: none;
-  filter: drop-shadow(1px 1px 0px rgba(239, 233, 215, 0.6));
+  filter: drop-shadow(1px 1px 0px var(--color-graffiti-shadow, rgba(239, 233, 215, 0.6)));
   transition: opacity 0.2s ease;
 }
 
@@ -39,35 +39,35 @@
 
 /* Palette variations */
 .graffiti--navy {
-  color: #183F68;
-  fill: #183F68;
+  color: var(--color-graffiti-navy, #183F68);
+  fill: var(--color-graffiti-navy, #183F68);
 }
 .graffiti--navy svg {
-  stroke: #183F68;
+  stroke: var(--color-graffiti-navy, #183F68);
 }
 
 .graffiti--orange {
-  color: #D56A25;
-  fill: #D56A25;
+  color: var(--color-orange, #D56A25);
+  fill: var(--color-orange, #D56A25);
 }
 .graffiti--orange svg {
-  stroke: #D56A25;
+  stroke: var(--color-orange, #D56A25);
 }
 
 .graffiti--golden {
-  color: #D5A62D;
-  fill: #D5A62D;
+  color: var(--color-golden, #D5A62D);
+  fill: var(--color-golden, #D5A62D);
 }
 .graffiti--golden svg {
-  stroke: #D5A62D;
+  stroke: var(--color-golden, #D5A62D);
 }
 
 .graffiti--charcoal {
-  color: #2E3E4E;
-  fill: #2E3E4E;
+  color: var(--color-graffiti-charcoal, #2E3E4E);
+  fill: var(--color-graffiti-charcoal, #2E3E4E);
 }
 .graffiti--charcoal svg {
-  stroke: #2E3E4E;
+  stroke: var(--color-graffiti-charcoal, #2E3E4E);
 }
 
 /* Spray effect filter */

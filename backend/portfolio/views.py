@@ -56,6 +56,7 @@ class ProjectCategoryListView(generics.ListAPIView):
     GET /api/project-filters/
     Returns active project categories/filters ordered by display_order.
     """
+    authentication_classes = []
     permission_classes = [AllowAny]
     serializer_class = ProjectCategorySerializer
 
@@ -68,6 +69,7 @@ class ResumeDownloadView(APIView):
     GET /api/resumes/<track>/
     Direct accessible endpoint that redirects to the active resume resource.
     """
+    authentication_classes = []
     permission_classes = [AllowAny]
 
     def get(self, request, track):
@@ -101,6 +103,7 @@ class ProfileView(APIView):
     GET /api/profile/
     Returns the singleton profile.
     """
+    authentication_classes = []
     permission_classes = [AllowAny]
 
     def get(self, request):
@@ -119,6 +122,7 @@ class ProjectListView(generics.ListAPIView):
     GET /api/projects/
     Returns all published projects, ordered by display_order.
     """
+    authentication_classes = []
     permission_classes = [AllowAny]
     serializer_class = ProjectListSerializer
 
@@ -135,6 +139,7 @@ class ProjectDetailView(generics.RetrieveAPIView):
     GET /api/projects/<slug>/
     Returns a single project by slug.
     """
+    authentication_classes = []
     permission_classes = [AllowAny]
     serializer_class = ProjectDetailSerializer
     lookup_field = 'slug'
@@ -146,6 +151,7 @@ class SkillListView(generics.ListAPIView):
     GET /api/skills/
     Returns all skill categories with nested skills.
     """
+    authentication_classes = []
     permission_classes = [AllowAny]
     serializer_class = SkillCategorySerializer
     queryset = SkillCategory.objects.prefetch_related('skills').all()
@@ -156,6 +162,7 @@ class SocialLinkListView(generics.ListAPIView):
     GET /api/social/
     Returns all social links.
     """
+    authentication_classes = []
     permission_classes = [AllowAny]
     serializer_class = SocialLinkSerializer
     queryset = SocialLink.objects.all()
@@ -166,6 +173,7 @@ class SiteSettingsView(APIView):
     GET /api/site-settings/
     Returns the singleton site settings.
     """
+    authentication_classes = []
     permission_classes = [AllowAny]
 
     def get(self, request):
@@ -183,6 +191,7 @@ class EducationListView(generics.ListAPIView):
     GET /api/education/
     Returns all education records, ordered by display_order.
     """
+    authentication_classes = []
     permission_classes = [AllowAny]
     serializer_class = EducationSerializer
     queryset = Education.objects.all()
@@ -193,6 +202,7 @@ class CertificationListView(generics.ListAPIView):
     GET /api/certifications/
     Returns all certification records, ordered by display_order.
     """
+    authentication_classes = []
     permission_classes = [AllowAny]
     serializer_class = CertificationSerializer
     queryset = Certification.objects.all()
@@ -205,6 +215,7 @@ class HealthCheckView(APIView):
     Keeps Render warm without waking or consuming Neon DB serverless compute hours.
     Pass ?check_db=true only when database verification is explicitly desired.
     """
+    authentication_classes = []
     permission_classes = [AllowAny]
 
     def get(self, request):

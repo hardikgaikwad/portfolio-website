@@ -35,19 +35,19 @@
 
 /* Deep navy 3D block extrusion / drop shadow */
 .retro-title__shadow-deep {
-  fill: #0B1929;
+  fill: var(--color-title-shadow-deep, #0B1929);
   opacity: 0.95;
 }
 
 .retro-title__shadow {
-  fill: #102B47;
+  fill: var(--color-title-shadow, #102B47);
   opacity: 0.85;
 }
 
 /* Dark navy contour framing */
 .retro-title__outline {
   fill: none;
-  stroke: #183F68;
+  stroke: var(--color-title-outline, #183F68);
   stroke-width: 6px;
   stroke-linejoin: round;
   stroke-linecap: round;

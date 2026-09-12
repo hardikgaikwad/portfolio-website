@@ -13,15 +13,16 @@
 .admin-login-box {
   width: 100%;
   max-width: 480px;
-  background: #fdfbf7;
-  border: 3px solid var(--color-ink, #001f3f);
-  box-shadow: 8px 8px 0px var(--color-ink, #001f3f);
+  background: var(--color-card-bg);
+  border: 3px solid var(--color-ink);
+  box-shadow: 8px 8px 0px var(--shadow-card-color);
   overflow: hidden;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .admin-login-box__header {
-  background: var(--color-ink, #001f3f);
-  color: #fff;
+  background: var(--color-ink-bg, var(--color-ink));
+  color: var(--color-ink-text, #fff);
   padding: 10px 16px;
   display: flex;
   justify-content: space-between;

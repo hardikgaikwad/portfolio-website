@@ -22,9 +22,12 @@ export default function ProceduralGridCanvas({ cellSize = 24 }: Props) {
     let needsRender = true;
     let lastScrollY = window.scrollY;
 
-    // Off-screen noise texture pattern to give tactile paper grain
-    let noisePattern: CanvasPattern | null = null;
-    const createNoisePattern = () => {
+    let isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    let currentProgress = isDark ? 1 : 0;
+    let targetProgress = isDark ? 1 : 0;
+
+    // Pre-generate both light and dark noise patterns for zero-latency crossfade
+    const createNoisePattern = (forDark: boolean) => {
       const noiseCanvas = document.createElement('canvas');
       const size = 256;
       noiseCanvas.width = size;
@@ -35,21 +38,44 @@ export default function ProceduralGridCanvas({ cellSize = 24 }: Props) {
       const imgData = nCtx.createImageData(size, size);
       const data = imgData.data;
 
-      // Seed subtle paper fiber / grain noise
+      // Seed paper grain noise
       for (let i = 0; i < data.length; i += 4) {
-        // Subtle warm luminance fluctuations (+/- 6)
-        const grain = (Math.random() - 0.5) * 12;
-        // Warm paper base tint ~ #EFE9D7: R=239, G=233, B=215
-        data[i] = Math.min(255, Math.max(0, 239 + grain));
-        data[i + 1] = Math.min(255, Math.max(0, 233 + grain));
-        data[i + 2] = Math.min(255, Math.max(0, 215 + grain * 0.8));
-        data[i + 3] = 255;
+        if (forDark) {
+          // Dark charcoal base tint ~ #111417: R=17, G=20, B=23 with subtle grain
+          const grain = (Math.random() - 0.5) * 8;
+          data[i] = Math.min(255, Math.max(0, 17 + grain));
+          data[i + 1] = Math.min(255, Math.max(0, 20 + grain));
+          data[i + 2] = Math.min(255, Math.max(0, 23 + grain * 1.1));
+          data[i + 3] = 255;
+        } else {
+          // Warm paper base tint ~ #EFE9D7: R=239, G=233, B=215
+          const grain = (Math.random() - 0.5) * 12;
+          data[i] = Math.min(255, Math.max(0, 239 + grain));
+          data[i + 1] = Math.min(255, Math.max(0, 233 + grain));
+          data[i + 2] = Math.min(255, Math.max(0, 215 + grain * 0.8));
+          data[i + 3] = 255;
+        }
       }
       nCtx.putImageData(imgData, 0, 0);
       return ctx.createPattern(noiseCanvas, 'repeat');
     };
 
-    noisePattern = createNoisePattern();
+    const lightNoisePattern = createNoisePattern(false);
+    const darkNoisePattern = createNoisePattern(true);
+
+    // Observe theme attribute changes on <html>
+    const themeObserver = new MutationObserver(() => {
+      const newIsDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      if (newIsDark !== isDark) {
+        isDark = newIsDark;
+        targetProgress = isDark ? 1 : 0;
+        needsRender = true;
+      }
+    });
+    themeObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+    });
 
     // Resize handling with High-DPI support
     const handleResize = () => {
@@ -78,25 +104,49 @@ export default function ProceduralGridCanvas({ cellSize = 24 }: Props) {
 
     window.addEventListener('scroll', handleScroll, { passive: true });
 
-    // Render loop
+    // Render loop with smooth theme interpolation
     const render = () => {
+      // Smoothly interpolate theme progress (approx. 400ms transition)
+      if (Math.abs(currentProgress - targetProgress) > 0.005) {
+        const step = (targetProgress - currentProgress) * 0.12;
+        currentProgress += Math.abs(step) < 0.002 ? (targetProgress > currentProgress ? 0.002 : -0.002) : step;
+        needsRender = true;
+      } else if (currentProgress !== targetProgress) {
+        currentProgress = targetProgress;
+        needsRender = true;
+      }
+
       if (needsRender) {
         needsRender = false;
 
         const width = window.innerWidth;
         const height = window.innerHeight;
 
-        // 1. Draw base warm paper background with grain texture
-        if (noisePattern) {
-          ctx.fillStyle = noisePattern;
+        // 1. Draw smoothly interpolated base paper background color
+        const r = Math.round(239 + (17 - 239) * currentProgress);
+        const g = Math.round(233 + (20 - 233) * currentProgress);
+        const b = Math.round(215 + (23 - 215) * currentProgress);
+        ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+        ctx.fillRect(0, 0, width, height);
+
+        // 2. Crossfade noise patterns
+        if (lightNoisePattern && currentProgress < 0.99) {
+          ctx.save();
+          ctx.globalAlpha = 1 - currentProgress;
+          ctx.fillStyle = lightNoisePattern;
           ctx.fillRect(0, 0, width, height);
-        } else {
-          ctx.fillStyle = '#EFE9D7';
-          ctx.fillRect(0, 0, width, height);
+          ctx.restore();
         }
 
-        // 2. Calculate subtle scroll parallax offset
-        // Parallax factor (0.95 means paper moves almost exactly with content, with a 5% physical drift)
+        if (darkNoisePattern && currentProgress > 0.01) {
+          ctx.save();
+          ctx.globalAlpha = currentProgress;
+          ctx.fillStyle = darkNoisePattern;
+          ctx.fillRect(0, 0, width, height);
+          ctx.restore();
+        }
+
+        // 3. Calculate subtle scroll parallax offset
         const parallaxFactor = 0.95;
         const totalOffsetY = (lastScrollY * parallaxFactor);
         const startY = - (totalOffsetY % cellSize);
@@ -105,7 +155,19 @@ export default function ProceduralGridCanvas({ cellSize = 24 }: Props) {
         // Determine the absolute vertical cell index for major 5-cell grid lines
         const firstRowIndex = Math.floor(totalOffsetY / cellSize);
 
-        // 3. Draw grid lines
+        // 4. Smoothly interpolated grid line colors
+        const majR = Math.round(165 + (65 - 165) * currentProgress);
+        const majG = Math.round(155 + (95 - 155) * currentProgress);
+        const majB = Math.round(135 + (130 - 135) * currentProgress);
+        const majA = (0.65 + (0.45 - 0.65) * currentProgress).toFixed(2);
+        const majorLineColor = `rgba(${majR}, ${majG}, ${majB}, ${majA})`;
+
+        const minR = Math.round(185 + (42 - 185) * currentProgress);
+        const minG = Math.round(178 + (62 - 178) * currentProgress);
+        const minB = Math.round(160 + (85 - 160) * currentProgress);
+        const minA = (0.42 + (0.28 - 0.42) * currentProgress).toFixed(2);
+        const minorLineColor = `rgba(${minR}, ${minG}, ${minB}, ${minA})`;
+
         ctx.save();
         ctx.lineWidth = 1;
 
@@ -115,7 +177,7 @@ export default function ProceduralGridCanvas({ cellSize = 24 }: Props) {
           const isMajor = colIndex % 5 === 0;
 
           ctx.beginPath();
-          ctx.strokeStyle = isMajor ? 'rgba(165, 155, 135, 0.65)' : 'rgba(185, 178, 160, 0.42)';
+          ctx.strokeStyle = isMajor ? majorLineColor : minorLineColor;
           ctx.moveTo(x + 0.5, 0);
           ctx.lineTo(x + 0.5, height);
           ctx.stroke();
@@ -130,7 +192,7 @@ export default function ProceduralGridCanvas({ cellSize = 24 }: Props) {
             const isMajor = rowIndex % 5 === 0;
 
             ctx.beginPath();
-            ctx.strokeStyle = isMajor ? 'rgba(165, 155, 135, 0.65)' : 'rgba(185, 178, 160, 0.42)';
+            ctx.strokeStyle = isMajor ? majorLineColor : minorLineColor;
             ctx.moveTo(0, currentY + 0.5);
             ctx.lineTo(width, currentY + 0.5);
             ctx.stroke();
@@ -157,6 +219,7 @@ export default function ProceduralGridCanvas({ cellSize = 24 }: Props) {
       cancelAnimationFrame(animFrameId);
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('scroll', handleScroll);
+      themeObserver.disconnect();
       resizeObserver.disconnect();
     };
   }, [cellSize]);

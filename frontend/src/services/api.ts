@@ -12,24 +12,28 @@ const api = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
-// JWT interceptor — attach token if available
+// JWT interceptor — attach token only to protected admin endpoints
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('access_token');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+  const url = config.url || '';
+  const isProtected = url.startsWith('/admin') || url.includes('/admin/');
+  if (isProtected) {
+    const token = localStorage.getItem('access_token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
   }
   return config;
 });
 
-// Response interceptor — handle 401
+// Response interceptor — handle 401 & purge dead tokens
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
+    if (error.response?.status === 401) {
       const refresh = localStorage.getItem('refresh_token');
-      if (refresh) {
+      if (refresh && !originalRequest._retry) {
+        originalRequest._retry = true;
         try {
           const res = await axios.post(`${API_BASE}/api/auth/refresh/`, { refresh });
           const { access } = res.data;
@@ -40,6 +44,9 @@ api.interceptors.response.use(
           localStorage.removeItem('access_token');
           localStorage.removeItem('refresh_token');
         }
+      } else {
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token');
       }
     }
     return Promise.reject(error);
