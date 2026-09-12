@@ -70,6 +70,8 @@
   --color-title-shadow-deep: #0B1929;
   --color-title-outline: #183F68;
   --color-signature-shadow: rgba(239, 233, 215, 0.65);
+  --color-signature-filter: none;
+  --color-signature-shadow-filter: drop-shadow(2px 3px 0px rgba(239, 233, 215, 0.65));
   --color-graffiti-shadow: rgba(239, 233, 215, 0.6);
   --color-graffiti-navy: #183F68;
   --color-graffiti-charcoal: #2E3E4E;
@@ -187,6 +189,8 @@
   --color-title-outline: #2E5884;
 
   --color-signature-shadow: rgba(0, 0, 0, 0.6);
+  --color-signature-filter: brightness(0) saturate(100%) invert(55%) sepia(90%) saturate(1450%) hue-rotate(344deg) brightness(102%) contrast(99%);
+  --color-signature-shadow-filter: drop-shadow(2px 3px 0px rgba(0, 0, 0, 0.85)) drop-shadow(0 0 14px rgba(224, 115, 46, 0.45));
   --color-graffiti-shadow: rgba(0, 0, 0, 0.5);
   --color-graffiti-navy: #3E6E9E;
   --color-graffiti-charcoal: #6C7D8E;

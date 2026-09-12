@@ -25,9 +25,9 @@
   user-select: none;
   pointer-events: auto;
   cursor: default;
-  filter: drop-shadow(2px 3px 0px var(--color-signature-shadow, rgba(239, 233, 215, 0.65)));
+  filter: var(--color-signature-shadow-filter, drop-shadow(2px 3px 0px var(--color-signature-shadow, rgba(239, 233, 215, 0.65))));
   transform: rotate(-2deg);
-  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), filter 400ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .signature-h4dk:hover {
@@ -40,6 +40,8 @@
   display: block;
   pointer-events: none;
   image-rendering: auto;
+  filter: var(--color-signature-filter, none);
+  transition: filter 400ms cubic-bezier(0.4, 0, 0.2, 1), opacity 400ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Responsive scaling */
